@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Card 🎂</title>
+  <link rel="stylesheet" href="card.css">
+</head>
+<body>
+
+  <!-- 🎧 BACKGROUND MUSIC -->
+  <audio id="card-music" src="card-music.mp3" loop></audio>
+
+  <!-- 🔊 CARD OPEN SOUND -->
+  <audio id="open-sound" src="open.mp3"></audio>
+
+  <!-- 💌 FLIP CARD -->
+  <div class="card-scene">
+    <div class="card">
+
+      <!-- Front -->
+      <div class="card-face card-front">
+        <h1>🎉 Happy Birthday 🎉</h1>
+        <p>Tap to open 💖</p>
+        <img src="tom-jerry-front.png" alt="Birthday Front" class="card-img">
+      </div>
+
+      <!-- Back -->
+      <div class="card-face card-back">
+        <h2>💌 From Jerry to Tom</h2>
+        <img src="tom-jerry-inside.png" alt="Birthday Inside" class="card-img">
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 🎉 SECOND CARD -->
+  <div class="second-card" style="display:none;">
+    <img src="tom-jerry-inside.png" alt="Memory" class="card-img">
+    <h2>✨ Our Beautiful Memories 💖</h2>
+  </div>
+
+  <!-- 📸 PHOTO SECTION -->
+  <div class="photo-section" id="photo-section" style="display:none;">
+
+    <div class="photo-slider" id="slider">
+
+      <div class="photo-box">
+        <img src="pk1.jpg" class="photo active" alt="Memory 1">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk2.jpg" class="photo" alt="Memory 2">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk3.jpg" class="photo" alt="Memory 3">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk4.jpg" class="photo" alt="Memory 4">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk5.jpg" class="photo" alt="Memory 5">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk6.jpg" class="photo" alt="Memory 6">
+        <div class="heart">❤️</div>
+      </div>
+
+      <div class="photo-box">
+        <img src="pk7.jpg" class="photo" alt="Memory 7">
+        <div class="heart">❤️</div>
+      </div>
+
+    </div>
+
+    <!-- 🎮 CONTROLS -->
+    <div class="controls">
+      <button onclick="prevPhoto()">⏮</button>
+      <button onclick="toggleSlider()" id="playBtn">⏸</button>
+      <button onclick="nextPhoto()">⏭</button>
+    </div>
+
+  </div>
+
+  <!-- ✨ GLITTER -->
+  <div class="glitter"></div>
+
+  <!-- 🚀 SCRIPT -->
+  <script src="card.js"></script>
+
+</body>
+</html>

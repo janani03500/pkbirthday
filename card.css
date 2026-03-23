@@ -1,0 +1,289 @@
+/* 🌸 PEACEFUL BACKGROUND */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #fceff9, #e0f7fa, #fdf6e3);
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* 🌟 SCENE (CENTER FIX) */
+.card-scene {
+  perspective: 1500px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 💌 CARD CONTAINER */
+.card {
+  width: 90vw;
+  max-width: 420px;
+  height: 80vh;
+  max-height: 600px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s ease;
+}
+
+/* 🔄 FLIP EFFECT */
+.card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* 🪟 CARD SIDES */
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* 🎉 FRONT SIDE */
+.card-front {
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  color: #333;
+  text-align: center;
+}
+
+/* 💌 BACK SIDE */
+.card-back {
+  background: linear-gradient(135deg, #d4fc79, #96e6a1);
+  transform: rotateY(180deg);
+  text-align: center;
+}
+
+/* 🖼️ IMAGE FIX */
+.card-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* 📝 TEXT */
+.card-front h1 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card-front p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.card-back h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+/* ✨ HOVER GLOW */
+.card:hover {
+  box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+}
+
+/* 🌟 SECOND CARD */
+.second-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #1a1a1a, #000);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  z-index: 10;
+  text-align: center;
+}
+
+.second-card img {
+  width: 80%;
+  max-width: 400px;
+  object-fit: contain;
+  margin-bottom: 20px;
+}
+
+.second-card h2 {
+  color: #fff; /* fixed contrast */
+  margin-top: 20px;
+  font-size: 1.4rem;
+}
+
+/* ✨ GLITTER EFFECT */
+.glitter {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: sparkle 3s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes sparkle {
+  from { transform: translateY(0); }
+  to { transform: translateY(-20px); }
+}
+
+/* 🎬 PHOTO SECTION */
+.photo-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 50;
+  background: radial-gradient(circle at center, #111 0%, #000 80%);
+}
+
+.photo-section::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+}
+
+.photo-section::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+  animation: moveGlow 12s linear infinite;
+}
+
+@keyframes moveGlow {
+  0% { transform: translate(-25%, -25%); }
+  50% { transform: translate(25%, 25%); }
+  100% { transform: translate(-25%, -25%); }
+}
+
+/* 🎞 SLIDER */
+.photo-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  width: 100%;
+  height: 100%;
+}
+
+.photo-box {
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+  margin: 0 10px;
+  position: relative;
+}
+
+/* 🖼 IMAGE */
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: black;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out, transform 0.4s;
+  cursor: pointer;
+}
+
+.photo.active {
+  opacity: 1;
+}
+
+.photo.zoom {
+  transform: scale(1.5);
+}
+
+/* ❤️ HEART ANIMATION */
+.heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 60px;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.heart.show {
+  transform: translate(-50%, -50%) scale(1.5);
+  opacity: 1;
+}
+
+/* 🎯 CONTROLS */
+.controls {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  gap: 20px;
+  z-index: 100;
+}
+
+.controls button {
+  min-width: 44px; /* thumb-friendly */
+  min-height: 44px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.controls button:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.15);
+}
+
+/* 📱 MOBILE OPTIMIZATION */
+@media (max-width: 600px) {
+  .card {
+    width: 95vw;
+    height: auto;
+    max-height: none;
+  }
+  .card-face img {
+    height: auto;
+    max-height: 250px;
+  }
+  .card-front h1, .card-back h2 {
+    font-size: 1.2rem;
+  }
+  .card-front p {
+    font-size: 0.9rem;
+  }
+  .controls {
+    bottom: 20px;
+    gap: 10px;
+  }
+  .controls button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}

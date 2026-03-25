@@ -21,23 +21,17 @@
   <!-- 💌 CARD SCENE -->
   <div class="card-scene" id="cardScene">
 
-    <!-- ✉️ ENVELOPE WRAPPER -->
     <div class="envelope" id="envelope">
-
-      <!-- 🔺 FLAP -->
       <div class="flap"></div>
 
-      <!-- 💌 CARD -->
       <div class="card" id="card">
 
-        <!-- FRONT -->
         <div class="card-face card-front">
           <h1>🎉 Happy Birthday 🎉</h1>
           <p>Tap to open 💖</p>
           <img src="tom-jerry-front.png" class="card-img">
         </div>
 
-        <!-- BACK -->
         <div class="card-face card-back">
           <h2>💌 From Jerry to Tom</h2>
           <img src="tom-jerry-inside.png" class="card-img">
@@ -48,16 +42,14 @@
 
   </div>
 
-
   <!-- 🎉 SECOND SCREEN -->
-  <div class="second-card" id="secondCard">
+  <div class="second-card" id="secondCard" style="display:none;">
     <img src="tom-jerry-inside.png" class="card-img">
     <h2>✨ Our Beautiful Memories 💖</h2>
   </div>
 
-
   <!-- 📸 PHOTO SECTION -->
-  <div class="photo-section" id="photo-section">
+  <div class="photo-section" id="photo-section" style="display:none;">
 
     <div class="photo-slider" id="slider">
 
@@ -98,7 +90,6 @@
 
     </div>
 
-    <!-- 🎮 CONTROLS -->
     <div class="controls">
       <button onclick="prevPhoto()">⏮</button>
       <button onclick="toggleSlider()" id="playBtn">⏸</button>
@@ -107,14 +98,9 @@
 
   </div>
 
-
-  <!-- 💖 FLOATING HEARTS CONTAINER -->
   <div id="floating-hearts"></div>
-
-  <!-- ✨ GLITTER -->
   <div class="glitter"></div>
 
-  <!-- 🚀 SCRIPT -->
   <script src="card.js"></script>
 
 </body>

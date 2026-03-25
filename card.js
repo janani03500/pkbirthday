@@ -1,39 +1,41 @@
+// =======================
 // 🎧 MUSIC
+// =======================
 const music = document.getElementById("card-music");
 
 // =======================
-// 🎯 MOBILE + DESKTOP TAP FIX
+// 🎯 MOBILE TAP FIX (ONLY ONE EVENT)
 // =======================
 const cardScene = document.getElementById("cardScene");
 
 let opened = false;
 
 if (cardScene) {
-  const startHandler = () => {
-    if (opened) return; // prevent double tap
-    opened = true;
+  cardScene.addEventListener("pointerdown", startHandler); // ✅ BEST FIX
+}
 
-    // 🎧 Start music ONLY after tap (mobile fix)
-    if (music) {
-      music.volume = 0;
-      music.play().then(() => {
-        let vol = 0;
-        let fade = setInterval(() => {
-          if (vol < 0.4) {
-            vol += 0.02;
-            music.volume = vol;
-          } else {
-            clearInterval(fade);
-          }
-        }, 200);
-      }).catch(() => {});
-    }
+function startHandler() {
+  if (opened) return;
+  opened = true;
 
-    flipCard();
-  };
+  // 🎧 Play music after user interaction
+  if (music) {
+    music.volume = 0;
 
-  cardScene.addEventListener("click", startHandler);
-  cardScene.addEventListener("touchstart", startHandler);
+    music.play().then(() => {
+      let vol = 0;
+      let fade = setInterval(() => {
+        if (vol < 0.4) {
+          vol += 0.02;
+          music.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200);
+    }).catch(() => {});
+  }
+
+  flipCard();
 }
 
 // =======================
@@ -52,22 +54,16 @@ function flipCard() {
     sound.play().catch(() => {});
   }
 
-  // 🎁 STEP 1 → SHOW SECOND CARD
+  // 🎁 STEP 1 → SECOND CARD
   setTimeout(() => {
-    const scene = document.querySelector(".card-scene");
-    const second = document.querySelector(".second-card");
-
-    if (scene) scene.style.display = "none";
-    if (second) second.style.display = "flex";
+    document.getElementById("cardScene").style.display = "none";
+    document.getElementById("secondCard").style.display = "flex";
   }, 2000);
 
-  // 📸 STEP 2 → SHOW PHOTO SECTION
+  // 📸 STEP 2 → PHOTO SECTION
   setTimeout(() => {
-    const second = document.querySelector(".second-card");
-    const photoSection = document.getElementById("photo-section");
-
-    if (second) second.style.display = "none";
-    if (photoSection) photoSection.style.display = "flex";
+    document.getElementById("secondCard").style.display = "none";
+    document.getElementById("photo-section").style.display = "flex";
 
     initPhotos();
     startSlider();
@@ -75,11 +71,11 @@ function flipCard() {
 }
 
 // =======================
-// 📸 INIT PHOTOS
+// 📸 PHOTO SYSTEM
 // =======================
 let current = 0;
 let photos = [];
-let interval;
+let interval = null;
 let isPlaying = true;
 
 function initPhotos() {
@@ -92,26 +88,7 @@ function initPhotos() {
   }
 }
 
-// =======================
-// ✨ GLITTER EFFECT
-// =======================
-function createGlitter() {
-  const sparkle = document.createElement("div");
-  sparkle.className = "sparkle";
-
-  sparkle.style.left = Math.random() * window.innerWidth + "px";
-  sparkle.style.top = Math.random() * window.innerHeight + "px";
-
-  document.body.appendChild(sparkle);
-
-  setTimeout(() => sparkle.remove(), 2000);
-}
-
-setInterval(createGlitter, 500);
-
-// =======================
-// 📸 PHOTO SLIDER
-// =======================
+// ▶ AUTO SLIDER
 function startSlider() {
   if (photos.length === 0) return;
 
@@ -119,6 +96,7 @@ function startSlider() {
   interval = setInterval(nextPhoto, 3500);
 }
 
+// ⏭ NEXT
 function nextPhoto() {
   if (photos.length === 0) return;
 
@@ -127,6 +105,7 @@ function nextPhoto() {
   photos[current].classList.add("active");
 }
 
+// ⏮ PREV
 function prevPhoto() {
   if (photos.length === 0) return;
 
@@ -135,6 +114,7 @@ function prevPhoto() {
   photos[current].classList.add("active");
 }
 
+// ⏯ PLAY / PAUSE
 function toggleSlider() {
   const btn = document.getElementById("playBtn");
 
@@ -150,7 +130,7 @@ function toggleSlider() {
 }
 
 // =======================
-// 👆 SWIPE SUPPORT
+// 👆 SWIPE (MOBILE)
 // =======================
 let startX = 0;
 const slider = document.getElementById("slider");
@@ -163,16 +143,13 @@ if (slider) {
   slider.addEventListener("touchend", e => {
     let endX = e.changedTouches[0].clientX;
 
-    if (startX - endX > 50) {
-      nextPhoto();
-    } else if (endX - startX > 50) {
-      prevPhoto();
-    }
+    if (startX - endX > 50) nextPhoto();
+    else if (endX - startX > 50) prevPhoto();
   });
 }
 
 // =======================
-// 🔍 TAP TO ZOOM + ❤️ DOUBLE TAP
+// 🔍 TAP ZOOM + ❤️ DOUBLE TAP
 // =======================
 let lastTap = 0;
 
@@ -181,20 +158,41 @@ document.querySelectorAll(".photo-box").forEach((box) => {
   const heart = box.querySelector(".heart");
 
   box.addEventListener("click", () => {
-    let now = new Date().getTime();
+    let now = Date.now();
 
+    // ❤️ DOUBLE TAP
     if (now - lastTap < 300) {
       heart.classList.add("show");
       setTimeout(() => heart.classList.remove("show"), 800);
     }
 
     lastTap = now;
+
+    // 🔍 ZOOM
     img.classList.toggle("zoom");
   });
 });
 
 // =======================
-// ❌ EXIT
+// ✨ GLITTER (LIGHTWEIGHT)
+// =======================
+function createGlitter() {
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+
+  sparkle.style.left = Math.random() * window.innerWidth + "px";
+  sparkle.style.top = Math.random() * window.innerHeight + "px";
+
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => sparkle.remove(), 2000);
+}
+
+// ✅ less lag
+setInterval(createGlitter, 700);
+
+// =======================
+// ❌ EXIT (OPTIONAL)
 // =======================
 function exitPhotos() {
   document.getElementById("photo-section").style.display = "none";

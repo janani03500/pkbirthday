@@ -10,7 +10,7 @@ body {
   overflow: hidden;
 }
 
-/* 🌟 SCENE (CENTER FIX) */
+/* 🌟 SCENE */
 .card-scene {
   perspective: 1500px;
   width: 100vw;
@@ -18,9 +18,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer; /* 🔥 IMPORTANT */
+  z-index: 5;
 }
 
-/* 💌 CARD CONTAINER */
+/* 💌 CARD */
 .card {
   width: 90vw;
   max-width: 420px;
@@ -31,12 +33,12 @@ body {
   transition: transform 1s ease;
 }
 
-/* 🔄 FLIP EFFECT */
+/* 🔄 FLIP */
 .card.is-flipped {
   transform: rotateY(180deg);
 }
 
-/* 🪟 CARD SIDES */
+/* 🪟 SIDES */
 .card-face {
   position: absolute;
   width: 100%;
@@ -51,14 +53,14 @@ body {
   padding: 20px;
 }
 
-/* 🎉 FRONT SIDE */
+/* 🎉 FRONT */
 .card-front {
   background: linear-gradient(135deg, #ffdde1, #ee9ca7);
   color: #333;
   text-align: center;
 }
 
-/* 💌 BACK SIDE */
+/* 💌 BACK */
 .card-back {
   background: linear-gradient(135deg, #d4fc79, #96e6a1);
   transform: rotateY(180deg);
@@ -72,6 +74,8 @@ body {
   object-fit: contain;
   border-radius: 12px;
   margin-top: 10px;
+
+  pointer-events: none; /* 🔥 VERY IMPORTANT (fix click issue) */
 }
 
 /* 📝 TEXT */
@@ -90,7 +94,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* ✨ HOVER GLOW */
+/* ✨ HOVER */
 .card:hover {
   box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
 }
@@ -108,7 +112,7 @@ body {
   align-items: center;
   flex-direction: column;
   color: white;
-  z-index: 10;
+  z-index: 20; /* 🔥 increased */
   text-align: center;
 }
 
@@ -120,26 +124,22 @@ body {
 }
 
 .second-card h2 {
-  color: #fff; /* fixed contrast */
+  color: #fff;
   margin-top: 20px;
   font-size: 1.4rem;
 }
 
-/* ✨ GLITTER EFFECT */
+/* ✨ GLITTER */
 .glitter {
   position: fixed;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
   background-image: radial-gradient(white 1px, transparent 1px);
   background-size: 20px 20px;
   animation: sparkle 3s linear infinite;
   opacity: 0.3;
-}
-
-@keyframes sparkle {
-  from { transform: translateY(0); }
-  to { transform: translateY(-20px); }
 }
 
 /* 🎬 PHOTO SECTION */
@@ -156,30 +156,6 @@ body {
   overflow: hidden;
   z-index: 50;
   background: radial-gradient(circle at center, #111 0%, #000 80%);
-}
-
-.photo-section::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.85) 100%);
-  pointer-events: none;
-}
-
-.photo-section::before {
-  content: "";
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
-  animation: moveGlow 12s linear infinite;
-}
-
-@keyframes moveGlow {
-  0% { transform: translate(-25%, -25%); }
-  50% { transform: translate(25%, 25%); }
-  100% { transform: translate(-25%, -25%); }
 }
 
 /* 🎞 SLIDER */
@@ -217,7 +193,7 @@ body {
   transform: scale(1.5);
 }
 
-/* ❤️ HEART ANIMATION */
+/* ❤️ HEART */
 .heart {
   position: absolute;
   top: 50%;
@@ -242,48 +218,20 @@ body {
   z-index: 100;
 }
 
-.controls button {
-  min-width: 44px; /* thumb-friendly */
-  min-height: 44px;
-  padding: 12px 20px;
-  border-radius: 30px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  backdrop-filter: blur(10px);
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
-}
-
-.controls button:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.15);
-}
-
-/* 📱 MOBILE OPTIMIZATION */
+/* 📱 MOBILE */
 @media (max-width: 600px) {
   .card {
     width: 95vw;
     height: auto;
     max-height: none;
   }
+
   .card-face img {
-    height: auto;
     max-height: 250px;
   }
-  .card-front h1, .card-back h2 {
-    font-size: 1.2rem;
-  }
-  .card-front p {
-    font-size: 0.9rem;
-  }
+
   .controls {
     bottom: 20px;
     gap: 10px;
-  }
-  .controls button {
-    padding: 10px 15px;
-    font-size: 14px;
   }
 }

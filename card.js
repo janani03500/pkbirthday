@@ -33,7 +33,7 @@ function startHandler() {
   if (opened) return;
   opened = true;
 
-  // 🎧 MUSIC START
+  // 🎧 MUSIC START (MOBILE SAFE)
   if (music) {
     music.volume = 0;
 
@@ -64,11 +64,14 @@ function flipCard() {
 
   if (!card) return;
 
+  // 🔓 flip animation
   card.classList.add("is-flipped");
 
+  // 💖 hearts animation
   createFloatingHearts();
   setTimeout(createFloatingHearts, 300);
 
+  // 🔊 sound
   if (sound) {
     sound.currentTime = 0;
     sound.play().catch(() => {});
@@ -76,18 +79,27 @@ function flipCard() {
 
   // 🎁 SHOW SECOND CARD
   setTimeout(() => {
-    document.getElementById("cardScene").style.display = "none";
-    document.getElementById("secondCard").style.display = "flex";
+    const scene = document.getElementById("cardScene");
+    const second = document.getElementById("secondCard");
+
+    if (scene) scene.style.display = "none";
+    if (second) second.style.display = "flex";
   }, 2200);
 
   // 📸 SHOW PHOTO SECTION
   setTimeout(() => {
-    document.getElementById("secondCard").style.display = "none";
-    document.getElementById("photo-section").style.display = "flex";
+    const second = document.getElementById("secondCard");
+    const photoSection = document.getElementById("photo-section");
 
-    initPhotos();
-    attachPhotoEvents(); // ✅ IMPORTANT FIX
-    startSlider();
+    if (second) second.style.display = "none";
+    if (photoSection) {
+      photoSection.style.display = "flex";
+
+      // 🔥 IMPORTANT FIX ORDER
+      initPhotos();
+      attachPhotoEvents();
+      startSlider();
+    }
   }, 6500);
 }
 
@@ -109,9 +121,13 @@ function initPhotos() {
   }
 }
 
-// ✅ FIX: Attach events AFTER visible
+// =======================
+// ✅ EVENT FIX (IMPORTANT)
+// =======================
 function attachPhotoEvents() {
-  document.querySelectorAll(".photo-box").forEach((box) => {
+  const boxes = document.querySelectorAll(".photo-box");
+
+  boxes.forEach((box) => {
     const img = box.querySelector(".photo");
     const heart = box.querySelector(".heart");
 
@@ -134,26 +150,41 @@ function attachPhotoEvents() {
   });
 }
 
+// =======================
 // ▶ AUTO SLIDER
+// =======================
 function startSlider() {
   if (photos.length === 0) return;
 
   clearInterval(interval);
-  interval = setInterval(nextPhoto, 5000);
+  interval = setInterval(nextPhoto, 5000); // synced with fade
 }
 
+// =======================
+// ⏭ NEXT
+// =======================
 function nextPhoto() {
+  if (photos.length === 0) return;
+
   photos[current].classList.remove("active");
   current = (current + 1) % photos.length;
   photos[current].classList.add("active");
 }
 
+// =======================
+// ⏮ PREV
+// =======================
 function prevPhoto() {
+  if (photos.length === 0) return;
+
   photos[current].classList.remove("active");
   current = (current - 1 + photos.length) % photos.length;
   photos[current].classList.add("active");
 }
 
+// =======================
+// ⏯ PLAY / PAUSE
+// =======================
 function toggleSlider() {
   const btn = document.getElementById("playBtn");
 
@@ -169,7 +200,7 @@ function toggleSlider() {
 }
 
 // =======================
-// 👆 SWIPE
+// 👆 SWIPE (MOBILE)
 // =======================
 let startX = 0;
 const slider = document.getElementById("slider");
@@ -208,5 +239,6 @@ setInterval(createGlitter, 800);
 // ❌ EXIT
 // =======================
 function exitPhotos() {
-  document.getElementById("photo-section").style.display = "none";
+  const section = document.getElementById("photo-section");
+  if (section) section.style.display = "none";
 }

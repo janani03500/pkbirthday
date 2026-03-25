@@ -33,7 +33,6 @@ function startHandler() {
   if (opened) return;
   opened = true;
 
-  // 🎧 MUSIC START (MOBILE SAFE)
   if (music) {
     music.volume = 0;
 
@@ -64,42 +63,28 @@ function flipCard() {
 
   if (!card) return;
 
-  // 🔓 flip animation
   card.classList.add("is-flipped");
 
-  // 💖 hearts animation
   createFloatingHearts();
   setTimeout(createFloatingHearts, 300);
 
-  // 🔊 sound
   if (sound) {
     sound.currentTime = 0;
     sound.play().catch(() => {});
   }
 
-  // 🎁 SHOW SECOND CARD
   setTimeout(() => {
-    const scene = document.getElementById("cardScene");
-    const second = document.getElementById("secondCard");
-
-    if (scene) scene.style.display = "none";
-    if (second) second.style.display = "flex";
+    document.getElementById("cardScene").style.display = "none";
+    document.getElementById("secondCard").style.display = "flex";
   }, 2200);
 
-  // 📸 SHOW PHOTO SECTION
   setTimeout(() => {
-    const second = document.getElementById("secondCard");
-    const photoSection = document.getElementById("photo-section");
+    document.getElementById("secondCard").style.display = "none";
+    document.getElementById("photo-section").style.display = "flex";
 
-    if (second) second.style.display = "none";
-    if (photoSection) {
-      photoSection.style.display = "flex";
-
-      // 🔥 IMPORTANT FIX ORDER
-      initPhotos();
-      attachPhotoEvents();
-      startSlider();
-    }
+    initPhotos();
+    attachPhotoEvents();
+    startSlider();
   }, 6500);
 }
 
@@ -110,6 +95,7 @@ let current = 0;
 let photos = [];
 let interval = null;
 let isPlaying = true;
+let messageShown = false; // ✅ prevent duplicate
 
 function initPhotos() {
   photos = document.querySelectorAll(".photo");
@@ -122,12 +108,10 @@ function initPhotos() {
 }
 
 // =======================
-// ✅ EVENT FIX (IMPORTANT)
+// ✅ EVENTS
 // =======================
 function attachPhotoEvents() {
-  const boxes = document.querySelectorAll(".photo-box");
-
-  boxes.forEach((box) => {
+  document.querySelectorAll(".photo-box").forEach((box) => {
     const img = box.querySelector(".photo");
     const heart = box.querySelector(".heart");
 
@@ -136,38 +120,48 @@ function attachPhotoEvents() {
     box.addEventListener("click", () => {
       let now = Date.now();
 
-      // ❤️ DOUBLE TAP
       if (now - lastTap < 300) {
         heart.classList.add("show");
         setTimeout(() => heart.classList.remove("show"), 800);
       }
 
       lastTap = now;
-
-      // 🔍 ZOOM
       img.classList.toggle("zoom");
     });
   });
 }
 
 // =======================
-// ▶ AUTO SLIDER
+// ▶ SLIDER
 // =======================
 function startSlider() {
   if (photos.length === 0) return;
 
   clearInterval(interval);
-  interval = setInterval(nextPhoto, 5000); // synced with fade
+  interval = setInterval(nextPhoto, 5000);
 }
 
 // =======================
-// ⏭ NEXT
+// ⏭ NEXT (FIXED)
 // =======================
 function nextPhoto() {
   if (photos.length === 0) return;
 
   photos[current].classList.remove("active");
-  current = (current + 1) % photos.length;
+
+  // ✅ LAST PHOTO → SHOW MESSAGE
+  if (current === photos.length - 1) {
+    clearInterval(interval);
+
+    if (!messageShown) {
+      messageShown = true;
+      showFinalMessage();
+    }
+
+    return;
+  }
+
+  current++;
   photos[current].classList.add("active");
 }
 
@@ -178,7 +172,13 @@ function prevPhoto() {
   if (photos.length === 0) return;
 
   photos[current].classList.remove("active");
-  current = (current - 1 + photos.length) % photos.length;
+
+  if (current === 0) {
+    current = photos.length - 1;
+  } else {
+    current--;
+  }
+
   photos[current].classList.add("active");
 }
 
@@ -200,7 +200,41 @@ function toggleSlider() {
 }
 
 // =======================
-// 👆 SWIPE (MOBILE)
+// 💬 FINAL MESSAGE
+// =======================
+function showFinalMessage() {
+  const section = document.getElementById("photo-section");
+
+  const messageBox = document.createElement("div");
+  messageBox.className = "final-message";
+
+  messageBox.innerHTML = `<span id="typingText"></span>`;
+
+  section.appendChild(messageBox);
+
+  typeMessage("You are not just my best friend... 💖 You are my home. Forever PK 💫");
+}
+
+// =======================
+// ✍️ TYPING EFFECT
+// =======================
+function typeMessage(text) {
+  let i = 0;
+  const el = document.getElementById("typingText");
+
+  function typing() {
+    if (i < text.length) {
+      el.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, 50);
+    }
+  }
+
+  typing();
+}
+
+// =======================
+// 👆 SWIPE
 // =======================
 let startX = 0;
 const slider = document.getElementById("slider");

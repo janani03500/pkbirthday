@@ -1,36 +1,56 @@
-/* 🌸 PEACEFUL BACKGROUND */
-body {
+/* =======================
+   🔧 RESET
+======================= */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 🌸 BACKGROUND */
+body {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #fceff9, #e0f7fa, #fdf6e3);
   font-family: 'Segoe UI', sans-serif;
-  overflow: hidden;
+
+  overflow-x: hidden; /* ✅ allow smooth mobile */
+  touch-action: manipulation; /* ✅ mobile tap fix */
 }
 
-/* 🌟 SCENE */
+/* =======================
+   🌟 SCENE
+======================= */
 .card-scene {
-  perspective: 1500px;
+  perspective: 1200px; /* ✅ smoother 3D */
   width: 100vw;
   height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer; /* 🔥 IMPORTANT */
+
+  cursor: pointer;
   z-index: 5;
 }
 
-/* 💌 CARD */
+/* =======================
+   💌 CARD
+======================= */
 .card {
   width: 90vw;
   max-width: 420px;
   height: 80vh;
   max-height: 600px;
+
   position: relative;
+
   transform-style: preserve-3d;
   transition: transform 1s ease;
+
+  will-change: transform; /* ✅ performance boost */
 }
 
 /* 🔄 FLIP */
@@ -38,49 +58,61 @@ body {
   transform: rotateY(180deg);
 }
 
-/* 🪟 SIDES */
+/* =======================
+   🪟 CARD SIDES
+======================= */
 .card-face {
   position: absolute;
   width: 100%;
   height: 100%;
+
   border-radius: 20px;
-  backface-visibility: hidden;
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   padding: 20px;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* ✅ iPhone fix */
 }
 
-/* 🎉 FRONT */
+/* FRONT */
 .card-front {
   background: linear-gradient(135deg, #ffdde1, #ee9ca7);
   color: #333;
   text-align: center;
 }
 
-/* 💌 BACK */
+/* BACK */
 .card-back {
   background: linear-gradient(135deg, #d4fc79, #96e6a1);
   transform: rotateY(180deg);
   text-align: center;
 }
 
-/* 🖼️ IMAGE FIX */
+/* =======================
+   🖼 IMAGE
+======================= */
 .card-img {
   width: 100%;
   height: auto;
   object-fit: contain;
+
   border-radius: 12px;
   margin-top: 10px;
 
-  pointer-events: none; /* 🔥 VERY IMPORTANT (fix click issue) */
+  pointer-events: none; /* ✅ IMPORTANT FIX */
 }
 
-/* 📝 TEXT */
+/* =======================
+   📝 TEXT
+======================= */
 .card-front h1 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
   margin-bottom: 10px;
 }
 
@@ -90,99 +122,128 @@ body {
 }
 
 .card-back h2 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
 }
 
-/* ✨ HOVER */
-.card:hover {
-  box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+/* =======================
+   ✨ HOVER (desktop only)
+======================= */
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+  }
 }
 
-/* 🌟 SECOND CARD */
+/* =======================
+   🌟 SECOND CARD
+======================= */
 .second-card {
   position: fixed;
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #1a1a1a, #000);
+
   display: none;
+
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  background: linear-gradient(to bottom, #1a1a1a, #000);
   color: white;
-  z-index: 20; /* 🔥 increased */
+
+  z-index: 20;
   text-align: center;
 }
 
 .second-card img {
   width: 80%;
   max-width: 400px;
-  object-fit: contain;
   margin-bottom: 20px;
 }
 
 .second-card h2 {
-  color: #fff;
-  margin-top: 20px;
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
-/* ✨ GLITTER */
+/* =======================
+   ✨ GLITTER
+======================= */
 .glitter {
   position: fixed;
   width: 100%;
   height: 100%;
   pointer-events: none;
+
   z-index: 1;
+
   background-image: radial-gradient(white 1px, transparent 1px);
   background-size: 20px 20px;
+
   animation: sparkle 3s linear infinite;
   opacity: 0.3;
 }
 
-/* 🎬 PHOTO SECTION */
+@keyframes sparkle {
+  from { transform: translateY(0); }
+  to { transform: translateY(-20px); }
+}
+
+/* =======================
+   📸 PHOTO SECTION
+======================= */
 .photo-section {
   position: fixed;
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
+
   display: none;
+
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   overflow: hidden;
+
   z-index: 50;
+
   background: radial-gradient(circle at center, #111 0%, #000 80%);
 }
 
-/* 🎞 SLIDER */
+/* SLIDER */
 .photo-slider {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+
   width: 100%;
   height: 100%;
 }
 
+/* BOX */
 .photo-box {
-  flex: 0 0 80%;
+  flex: 0 0 85%;
   scroll-snap-align: center;
+
   margin: 0 10px;
   position: relative;
 }
 
-/* 🖼 IMAGE */
+/* IMAGE */
 .photo {
   width: 100%;
   height: 100%;
   object-fit: contain;
+
   background: black;
+
   opacity: 0;
-  transition: opacity 1.5s ease-in-out, transform 0.4s;
-  cursor: pointer;
+  transition: opacity 1.2s ease, transform 0.3s;
 }
 
 .photo.active {
@@ -190,7 +251,7 @@ body {
 }
 
 .photo.zoom {
-  transform: scale(1.5);
+  transform: scale(1.4);
 }
 
 /* ❤️ HEART */
@@ -198,10 +259,13 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: 60px;
+
+  font-size: 50px;
+
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
-  transition: 0.4s;
+
+  transition: 0.3s;
 }
 
 .heart.show {
@@ -209,29 +273,56 @@ body {
   opacity: 1;
 }
 
-/* 🎯 CONTROLS */
+/* =======================
+   🎮 CONTROLS
+======================= */
 .controls {
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
+
   display: flex;
-  gap: 20px;
+  gap: 15px;
+
   z-index: 100;
 }
 
-/* 📱 MOBILE */
+.controls button {
+  min-width: 44px;
+  min-height: 44px;
+
+  border: none;
+  border-radius: 25px;
+
+  background: rgba(255,255,255,0.2);
+  color: white;
+
+  backdrop-filter: blur(10px);
+
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* =======================
+   📱 MOBILE
+======================= */
 @media (max-width: 600px) {
+
   .card {
     width: 95vw;
     height: auto;
     max-height: none;
   }
 
-  .card-face img {
+  .card-img {
     max-height: 250px;
   }
 
   .controls {
     bottom: 20px;
     gap: 10px;
+  }
+
+  .controls button {
+    font-size: 14px;
   }
 }

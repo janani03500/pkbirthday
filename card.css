@@ -38,21 +38,18 @@ body {
 }
 
 /* =======================
-   💌 CARD (ENVELOPE STYLE)
+   💌 CARD
 ======================= */
 .card {
   width: 90vw;
   max-width: 420px;
-
   aspect-ratio: 3 / 4;
 
   position: relative;
   transform-style: preserve-3d;
-
   transition: transform 1s ease;
 }
 
-/* 🔄 FLIP */
 .card.is-flipped {
   transform: rotateY(180deg);
   box-shadow: 0 0 40px rgba(255, 105, 180, 0.8);
@@ -71,7 +68,6 @@ body {
   height: 50%;
 
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top;
 
@@ -128,7 +124,6 @@ body {
   object-fit: contain;
 
   border-radius: 12px;
-
   pointer-events: none;
 }
 
@@ -136,15 +131,13 @@ body {
    💖 FLOATING HEARTS
 ======================= */
 .heart-float {
-  position: absolute;
-  bottom: 20px;
-
-  font-size: 20px;
+  position: fixed;
+  bottom: 0;
   color: #ff4d6d;
 
-  animation: floatUp 2s linear forwards;
+  animation: floatUp 3s linear forwards;
   pointer-events: none;
-  z-index: 10;
+  z-index: 200;
 }
 
 @keyframes floatUp {
@@ -153,7 +146,7 @@ body {
     opacity: 1;
   }
   100% {
-    transform: translateY(-150px) scale(1.5);
+    transform: translateY(-200px) scale(1.8);
     opacity: 0;
   }
 }
@@ -170,7 +163,6 @@ body {
   height: 100%;
 
   display: none;
-
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -189,7 +181,7 @@ body {
 }
 
 /* =======================
-   📸 PHOTO SECTION (FIXED)
+   📸 PHOTO SECTION
 ======================= */
 .photo-section {
   position: fixed;
@@ -200,7 +192,6 @@ body {
   height: 100%;
 
   display: none;
-
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -215,10 +206,6 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* BOX */
@@ -227,6 +214,9 @@ body {
   width: 90%;
   max-width: 500px;
   height: 80%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* IMAGE */
@@ -241,7 +231,7 @@ body {
   transition: opacity 2.5s ease-in-out, transform 0.4s;
 }
 
-/* ACTIVE IMAGE */
+/* ACTIVE */
 .photo.active {
   opacity: 1 !important;
 }
@@ -289,9 +279,55 @@ body {
   color: white;
 
   backdrop-filter: blur(10px);
-
   font-size: 16px;
-  cursor: pointer;
+}
+
+/* =======================
+   💖 FINAL MESSAGE
+======================= */
+.final-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: radial-gradient(circle, #000, #111);
+
+  z-index: 100;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ✨ GLOW TEXT */
+#typingText {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  line-height: 1.6;
+
+  background: linear-gradient(90deg, #ffd633, #fff, #ff66ff, #ffd633);
+  background-size: 200% auto;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 4s linear infinite, glowPulse 2s ease-in-out infinite;
+}
+
+/* glow */
+@keyframes glowPulse {
+  0%,100% { text-shadow: 0 0 10px #ff66ff; }
+  50% { text-shadow: 0 0 30px #ff66ff; }
+}
+
+/* shine */
+@keyframes shine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 /* =======================

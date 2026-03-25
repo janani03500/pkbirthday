@@ -1,382 +1,243 @@
-/* =======================
-   🔧 RESET
-======================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// =======================
+// 🎧 MUSIC
+// =======================
+const music = document.getElementById("card-music");
 
-/* =======================
-   🌸 BACKGROUND
-======================= */
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// =======================
+// 💖 FLOATING HEARTS
+// =======================
+function createFloatingHearts() {
+  for (let i = 0; i < 12; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart-float";
+    heart.innerText = "💖";
 
-  background: linear-gradient(135deg, #fceff9, #e0f7fa, #fdf6e3);
-  font-family: 'Segoe UI', sans-serif;
+    heart.style.left = Math.random() * window.innerWidth + "px";
 
-  overflow: hidden;
-}
-
-/* =======================
-   🌟 SCENE
-======================= */
-.card-scene {
-  perspective: 1200px;
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  cursor: pointer;
-}
-
-/* =======================
-   💌 CARD
-======================= */
-.card {
-  width: 90vw;
-  max-width: 420px;
-  aspect-ratio: 3 / 4;
-
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 1s ease;
-}
-
-.card.is-flipped {
-  transform: rotateY(180deg);
-  box-shadow: 0 0 40px rgba(255, 105, 180, 0.8);
-}
-
-/* =======================
-   ✉️ ENVELOPE FLAP
-======================= */
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 50%;
-
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  transform-origin: top;
-
-  transition: transform 1s ease;
-  z-index: 3;
-}
-
-.card.is-flipped::before {
-  transform: rotateX(180deg);
-}
-
-/* =======================
-   🪟 CARD SIDES
-======================= */
-.card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-
-  border-radius: 20px;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-
-  padding: 20px;
-
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* FRONT */
-.card-front {
-  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-  color: #333;
-  text-align: center;
-}
-
-/* BACK */
-.card-back {
-  background: linear-gradient(135deg, #d4fc79, #96e6a1);
-  transform: rotateY(180deg);
-  text-align: center;
-}
-
-/* =======================
-   🖼 IMAGE
-======================= */
-.card-img {
-  width: 100%;
-  max-height: 60%;
-  object-fit: contain;
-
-  border-radius: 12px;
-  pointer-events: none;
-}
-
-/* =======================
-   💖 FLOATING HEARTS
-======================= */
-.heart-float {
-  position: fixed;
-  bottom: 0;
-  color: #ff4d6d;
-
-  animation: floatUp 3s linear forwards;
-  pointer-events: none;
-  z-index: 200;
-}
-
-@keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-200px) scale(1.8);
-    opacity: 0;
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 2000);
   }
 }
 
-/* =======================
-   🌟 SECOND CARD
-======================= */
-.second-card {
-  position: fixed;
-  top: 0;
-  left: 0;
+// =======================
+// 🎯 START HANDLER
+// =======================
+const cardScene = document.getElementById("cardScene");
+let opened = false;
 
-  width: 100%;
-  height: 100%;
-
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  background: linear-gradient(to bottom, #1a1a1a, #000);
-  color: white;
-
-  z-index: 20;
-  text-align: center;
+if (cardScene) {
+  cardScene.addEventListener("pointerdown", startHandler);
 }
 
-.second-card img {
-  width: 80%;
-  max-width: 400px;
-  margin-bottom: 20px;
-}
+function startHandler() {
+  if (opened) return;
+  opened = true;
 
-/* =======================
-   📸 PHOTO SECTION
-======================= */
-.photo-section {
-  position: fixed;
-  top: 0;
-  left: 0;
+  if (music) {
+    music.volume = 0;
 
-  width: 100%;
-  height: 100%;
+    music.play().then(() => {
+      music.currentTime = 1.5;
 
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  z-index: 50;
-
-  background: radial-gradient(circle at center, #111 0%, #000 80%);
-}
-
-/* SLIDER */
-.photo-slider {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* BOX */
-.photo-box {
-  position: absolute;
-  width: 90%;
-  max-width: 500px;
-  height: 80%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* IMAGE */
-.photo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-
-  background: #111;
-
-  opacity: 0;
-  transition: opacity 2.5s ease-in-out, transform 0.4s;
-}
-
-/* ACTIVE */
-.photo.active {
-  opacity: 1 !important;
-}
-
-/* ❤️ HEART */
-.heart {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  font-size: 50px;
-
-  transform: translate(-50%, -50%) scale(0);
-  opacity: 0;
-
-  transition: 0.3s;
-}
-
-.heart.show {
-  transform: translate(-50%, -50%) scale(1.5);
-  opacity: 1;
-}
-
-/* =======================
-   🎮 CONTROLS
-======================= */
-.controls {
-  position: absolute;
-  bottom: 30px;
-
-  display: flex;
-  gap: 15px;
-
-  z-index: 100;
-}
-
-.controls button {
-  min-width: 44px;
-  min-height: 44px;
-
-  border: none;
-  border-radius: 25px;
-
-  background: rgba(255,255,255,0.2);
-  color: white;
-
-  backdrop-filter: blur(10px);
-  font-size: 16px;
-}
-
-/* =======================
-   💖 FINAL MESSAGE
-======================= */
-.final-message {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: none;
-  justify-content: center;
-  align-items: center;
-
-  background: radial-gradient(circle, #000, #111);
-
-  z-index: 100;
-  text-align: center;
-  padding: 20px;
-}
-
-/* ✨ GLOW TEXT */
-#typingText {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  line-height: 1.6;
-
-  background: linear-gradient(90deg, #ffd633, #fff, #ff66ff, #ffd633);
-  background-size: 200% auto;
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  animation: shine 4s linear infinite, glowPulse 2s ease-in-out infinite;
-}
-
-/* glow */
-@keyframes glowPulse {
-  0%,100% { text-shadow: 0 0 10px #ff66ff; }
-  50% { text-shadow: 0 0 30px #ff66ff; }
-}
-
-/* shine */
-@keyframes shine {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-
-/* =======================
-   ✨ GLITTER
-======================= */
-.glitter {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-
-  z-index: 1;
-
-  background-image: radial-gradient(white 1px, transparent 1px);
-  background-size: 20px 20px;
-
-  animation: sparkle 3s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes sparkle {
-  from { transform: translateY(0); }
-  to { transform: translateY(-20px); }
-}
-
-/* =======================
-   📱 MOBILE FIX
-======================= */
-@media (max-width: 600px) {
-
-  .card {
-    width: 95vw;
+      let vol = 0;
+      let fade = setInterval(() => {
+        if (vol < 0.4) {
+          vol += 0.02;
+          music.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200);
+    }).catch(() => {});
   }
 
-  .card-img {
-    max-height: 200px;
+  flipCard();
+}
+
+// =======================
+// 🔄 FLIP FLOW
+// =======================
+function flipCard() {
+  const card = document.querySelector(".card");
+  const sound = document.getElementById("open-sound");
+
+  if (!card) return;
+
+  card.classList.add("is-flipped");
+
+  createFloatingHearts();
+  setTimeout(createFloatingHearts, 300);
+
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
   }
 
-  .photo-box {
-    width: 95%;
-    height: 70%;
-  }
+  // 🎁 SECOND CARD
+  setTimeout(() => {
+    document.getElementById("cardScene").style.display = "none";
+    document.getElementById("secondCard").style.display = "flex";
+  }, 2200);
 
-  .controls {
-    bottom: 20px;
-    gap: 10px;
-  }
+  // 📸 PHOTO SECTION
+  setTimeout(() => {
+    document.getElementById("secondCard").style.display = "none";
+    document.getElementById("photo-section").style.display = "flex";
 
-  .controls button {
-    font-size: 14px;
+    initPhotos();
+    attachPhotoEvents();
+    startSlider();
+  }, 6500);
+}
+
+// =======================
+// 📸 PHOTO SYSTEM
+// =======================
+let current = 0;
+let photos = [];
+let interval = null;
+let isPlaying = true;
+
+function initPhotos() {
+  photos = document.querySelectorAll(".photo");
+
+  if (photos.length > 0) {
+    photos.forEach(p => p.classList.remove("active"));
+    photos[0].classList.add("active");
+    current = 0;
   }
 }
+
+// =======================
+// ✅ PHOTO EVENTS
+// =======================
+function attachPhotoEvents() {
+  document.querySelectorAll(".photo-box").forEach((box) => {
+    const img = box.querySelector(".photo");
+    const heart = box.querySelector(".heart");
+
+    let lastTap = 0;
+
+    box.addEventListener("click", () => {
+      let now = Date.now();
+
+      if (now - lastTap < 300) {
+        heart.classList.add("show");
+        setTimeout(() => heart.classList.remove("show"), 800);
+      }
+
+      lastTap = now;
+      img.classList.toggle("zoom");
+    });
+  });
+}
+
+// =======================
+// ▶ AUTO SLIDER (FIXED)
+// =======================
+function startSlider() {
+  if (photos.length === 0) return;
+
+  clearInterval(interval);
+
+  interval = setInterval(() => {
+    // 🛑 STOP AT LAST PHOTO
+    if (current === photos.length - 1) {
+      clearInterval(interval);
+
+      setTimeout(showFinalMessage, 2000); // show message after last photo
+      return;
+    }
+
+    nextPhoto();
+  }, 5000);
+}
+
+// =======================
+// ⏭ NEXT
+// =======================
+function nextPhoto() {
+  photos[current].classList.remove("active");
+  current++;
+  photos[current].classList.add("active");
+}
+
+// =======================
+// ⏮ PREV
+// =======================
+function prevPhoto() {
+  photos[current].classList.remove("active");
+  current = (current - 1 + photos.length) % photos.length;
+  photos[current].classList.add("active");
+}
+
+// =======================
+// ⏯ PLAY / PAUSE
+// =======================
+function toggleSlider() {
+  const btn = document.getElementById("playBtn");
+
+  if (isPlaying) {
+    clearInterval(interval);
+    if (btn) btn.innerText = "▶ Play";
+  } else {
+    startSlider();
+    if (btn) btn.innerText = "⏸ Pause";
+  }
+
+  isPlaying = !isPlaying;
+}
+
+// =======================
+// 💌 FINAL MESSAGE
+// =======================
+function showFinalMessage() {
+  document.getElementById("photo-section").style.display = "none";
+
+  const final = document.getElementById("finalMessage");
+  final.style.display = "flex";
+
+  typeMessage();
+}
+
+// =======================
+// ✨ TYPEWRITER
+// =======================
+const messageText = `Happy Birthday PK 💖
+
+You are my best friend,
+my home, my happiness ✨
+
+No matter how much we fight,
+I can never leave you 🫂
+
+Forever Tom & Jerry 💛`;
+
+let index = 0;
+
+function typeMessage() {
+  const el = document.getElementById("typingText");
+
+  if (index < messageText.length) {
+    el.innerHTML += messageText.charAt(index);
+    index++;
+    setTimeout(typeMessage, 40);
+  }
+}
+
+// =======================
+// ✨ GLITTER
+// =======================
+function createGlitter() {
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+
+  sparkle.style.left = Math.random() * window.innerWidth + "px";
+  sparkle.style.top = Math.random() * window.innerHeight + "px";
+
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => sparkle.remove(), 2000);
+}
+
+setInterval(createGlitter, 800);

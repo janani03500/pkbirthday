@@ -15,16 +15,14 @@ function createFloatingHearts() {
     heart.style.left = Math.random() * window.innerWidth + "px";
 
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 2000);
   }
 }
 
 // =======================
-// 🎯 MOBILE TAP FIX
+// 🎯 START HANDLER
 // =======================
 const cardScene = document.getElementById("cardScene");
-
 let opened = false;
 
 if (cardScene) {
@@ -35,12 +33,11 @@ function startHandler() {
   if (opened) return;
   opened = true;
 
-  // 🎧 PLAY MUSIC (SYNC FEEL)
+  // 🎧 MUSIC START
   if (music) {
     music.volume = 0;
 
     music.play().then(() => {
-      // 🔥 skip intro → emotional start
       music.currentTime = 1.5;
 
       let vol = 0;
@@ -59,7 +56,7 @@ function startHandler() {
 }
 
 // =======================
-// 🔄 FLIP CARD + FLOW
+// 🔄 FLIP CARD FLOW
 // =======================
 function flipCard() {
   const card = document.querySelector(".card");
@@ -69,31 +66,27 @@ function flipCard() {
 
   card.classList.add("is-flipped");
 
-  // 💖 HEART BURST (SYNC WITH OPEN)
   createFloatingHearts();
+  setTimeout(createFloatingHearts, 300);
 
-  setTimeout(() => {
-    createFloatingHearts();
-  }, 300);
-
-  // 🔊 OPEN SOUND
   if (sound) {
     sound.currentTime = 0;
     sound.play().catch(() => {});
   }
 
-  // 🎁 STEP 1 → SECOND CARD
+  // 🎁 SHOW SECOND CARD
   setTimeout(() => {
     document.getElementById("cardScene").style.display = "none";
     document.getElementById("secondCard").style.display = "flex";
-  }, 2200); // ⏱ match animation
+  }, 2200);
 
-  // 📸 STEP 2 → PHOTO SECTION
+  // 📸 SHOW PHOTO SECTION
   setTimeout(() => {
     document.getElementById("secondCard").style.display = "none";
     document.getElementById("photo-section").style.display = "flex";
 
     initPhotos();
+    attachPhotoEvents(); // ✅ IMPORTANT FIX
     startSlider();
   }, 6500);
 }
@@ -116,33 +109,51 @@ function initPhotos() {
   }
 }
 
-// ▶ AUTO SLIDER (SYNC WITH FADE)
+// ✅ FIX: Attach events AFTER visible
+function attachPhotoEvents() {
+  document.querySelectorAll(".photo-box").forEach((box) => {
+    const img = box.querySelector(".photo");
+    const heart = box.querySelector(".heart");
+
+    let lastTap = 0;
+
+    box.addEventListener("click", () => {
+      let now = Date.now();
+
+      // ❤️ DOUBLE TAP
+      if (now - lastTap < 300) {
+        heart.classList.add("show");
+        setTimeout(() => heart.classList.remove("show"), 800);
+      }
+
+      lastTap = now;
+
+      // 🔍 ZOOM
+      img.classList.toggle("zoom");
+    });
+  });
+}
+
+// ▶ AUTO SLIDER
 function startSlider() {
   if (photos.length === 0) return;
 
   clearInterval(interval);
-  interval = setInterval(nextPhoto, 5000); // 🔥 smoother timing
+  interval = setInterval(nextPhoto, 5000);
 }
 
-// ⏭ NEXT
 function nextPhoto() {
-  if (photos.length === 0) return;
-
   photos[current].classList.remove("active");
   current = (current + 1) % photos.length;
   photos[current].classList.add("active");
 }
 
-// ⏮ PREV
 function prevPhoto() {
-  if (photos.length === 0) return;
-
   photos[current].classList.remove("active");
   current = (current - 1 + photos.length) % photos.length;
   photos[current].classList.add("active");
 }
 
-// ⏯ PLAY / PAUSE
 function toggleSlider() {
   const btn = document.getElementById("playBtn");
 
@@ -158,7 +169,7 @@ function toggleSlider() {
 }
 
 // =======================
-// 👆 SWIPE (MOBILE)
+// 👆 SWIPE
 // =======================
 let startX = 0;
 const slider = document.getElementById("slider");
@@ -177,30 +188,7 @@ if (slider) {
 }
 
 // =======================
-// 🔍 TAP ZOOM + ❤️ DOUBLE TAP
-// =======================
-let lastTap = 0;
-
-document.querySelectorAll(".photo-box").forEach((box) => {
-  const img = box.querySelector(".photo");
-  const heart = box.querySelector(".heart");
-
-  box.addEventListener("click", () => {
-    let now = Date.now();
-
-    if (now - lastTap < 300) {
-      heart.classList.add("show");
-      setTimeout(() => heart.classList.remove("show"), 800);
-    }
-
-    lastTap = now;
-
-    img.classList.toggle("zoom");
-  });
-});
-
-// =======================
-// ✨ GLITTER (LIGHT)
+// ✨ GLITTER
 // =======================
 function createGlitter() {
   const sparkle = document.createElement("div");

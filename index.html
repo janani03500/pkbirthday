@@ -2,35 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prathish Kumar🎉</title>
+
+  <!-- ✅ MOBILE FIX (VERY IMPORTANT) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Prathish Kumar 🎉</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Start Overlay -->
-  <div id="start-overlay" onclick="startApp()">
+  <!-- 🎬 START OVERLAY -->
+  <div id="start-overlay">
     <h1>Tap to Start 🎂</h1>
   </div>
 
-  <!-- Countdown -->
+  <!-- ⏳ COUNTDOWN -->
   <div id="countdown">
     <span id="timer">10</span>
   </div>
 
-  <!-- Wish Section -->
+  <!-- 🎉 WISH SECTION -->
   <div id="wish">
-    <h1 id="wish-text"></h1>
+    <h1 id="wish-text">🎉 Happy Birthday PK 🎉</h1>
     <button id="btn-card">🎂 Open Card</button>
   </div>
 
-  <!-- Fireworks Canvas -->
+  <!-- 🎆 FIREWORKS -->
   <canvas id="fireworks-canvas"></canvas>
 
-  <!-- Background Music -->
-  <audio id="music" src="birthday-song.mp3" loop></audio>
-  <audio id="boomSound" src="boom.mp3"></audio>
+  <!-- 🎧 AUDIO -->
+  <audio id="music" src="birthday-song.mp3" loop preload="auto"></audio>
+  <audio id="boomSound" src="boom.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
+
 </body>
 </html>

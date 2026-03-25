@@ -4,25 +4,45 @@
 const music = document.getElementById("card-music");
 
 // =======================
-// 🎯 MOBILE TAP FIX (ONLY ONE EVENT)
+// 💖 FLOATING HEARTS
+// =======================
+function createFloatingHearts() {
+  for (let i = 0; i < 12; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart-float";
+    heart.innerText = "💖";
+
+    heart.style.left = Math.random() * window.innerWidth + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 2000);
+  }
+}
+
+// =======================
+// 🎯 MOBILE TAP FIX
 // =======================
 const cardScene = document.getElementById("cardScene");
 
 let opened = false;
 
 if (cardScene) {
-  cardScene.addEventListener("pointerdown", startHandler); // ✅ BEST FIX
+  cardScene.addEventListener("pointerdown", startHandler);
 }
 
 function startHandler() {
   if (opened) return;
   opened = true;
 
-  // 🎧 Play music after user interaction
+  // 🎧 PLAY MUSIC (SYNC FEEL)
   if (music) {
     music.volume = 0;
 
     music.play().then(() => {
+      // 🔥 skip intro → emotional start
+      music.currentTime = 1.5;
+
       let vol = 0;
       let fade = setInterval(() => {
         if (vol < 0.4) {
@@ -49,6 +69,14 @@ function flipCard() {
 
   card.classList.add("is-flipped");
 
+  // 💖 HEART BURST (SYNC WITH OPEN)
+  createFloatingHearts();
+
+  setTimeout(() => {
+    createFloatingHearts();
+  }, 300);
+
+  // 🔊 OPEN SOUND
   if (sound) {
     sound.currentTime = 0;
     sound.play().catch(() => {});
@@ -58,7 +86,7 @@ function flipCard() {
   setTimeout(() => {
     document.getElementById("cardScene").style.display = "none";
     document.getElementById("secondCard").style.display = "flex";
-  }, 2000);
+  }, 2200); // ⏱ match animation
 
   // 📸 STEP 2 → PHOTO SECTION
   setTimeout(() => {
@@ -67,7 +95,7 @@ function flipCard() {
 
     initPhotos();
     startSlider();
-  }, 6000);
+  }, 6500);
 }
 
 // =======================
@@ -88,12 +116,12 @@ function initPhotos() {
   }
 }
 
-// ▶ AUTO SLIDER
+// ▶ AUTO SLIDER (SYNC WITH FADE)
 function startSlider() {
   if (photos.length === 0) return;
 
   clearInterval(interval);
-  interval = setInterval(nextPhoto, 3500);
+  interval = setInterval(nextPhoto, 5000); // 🔥 smoother timing
 }
 
 // ⏭ NEXT
@@ -160,7 +188,6 @@ document.querySelectorAll(".photo-box").forEach((box) => {
   box.addEventListener("click", () => {
     let now = Date.now();
 
-    // ❤️ DOUBLE TAP
     if (now - lastTap < 300) {
       heart.classList.add("show");
       setTimeout(() => heart.classList.remove("show"), 800);
@@ -168,13 +195,12 @@ document.querySelectorAll(".photo-box").forEach((box) => {
 
     lastTap = now;
 
-    // 🔍 ZOOM
     img.classList.toggle("zoom");
   });
 });
 
 // =======================
-// ✨ GLITTER (LIGHTWEIGHT)
+// ✨ GLITTER (LIGHT)
 // =======================
 function createGlitter() {
   const sparkle = document.createElement("div");
@@ -188,11 +214,10 @@ function createGlitter() {
   setTimeout(() => sparkle.remove(), 2000);
 }
 
-// ✅ less lag
-setInterval(createGlitter, 700);
+setInterval(createGlitter, 800);
 
 // =======================
-// ❌ EXIT (OPTIONAL)
+// ❌ EXIT
 // =======================
 function exitPhotos() {
   document.getElementById("photo-section").style.display = "none";

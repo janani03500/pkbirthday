@@ -1,24 +1,40 @@
 // 🎧 MUSIC
 const music = document.getElementById("card-music");
 
-// 🎬 START MUSIC (SMOOTH FADE)
-window.onload = () => {
-  if (!music) return;
+// =======================
+// 🎯 MOBILE + DESKTOP TAP FIX
+// =======================
+const cardScene = document.getElementById("cardScene");
 
-  music.volume = 0;
-  // Autoplay fix: wait for user tap
-  music.play().catch(() => {});
+let opened = false;
 
-  let vol = 0;
-  let fade = setInterval(() => {
-    if (vol < 0.4) {
-      vol += 0.02;
-      music.volume = vol;
-    } else {
-      clearInterval(fade);
+if (cardScene) {
+  const startHandler = () => {
+    if (opened) return; // prevent double tap
+    opened = true;
+
+    // 🎧 Start music ONLY after tap (mobile fix)
+    if (music) {
+      music.volume = 0;
+      music.play().then(() => {
+        let vol = 0;
+        let fade = setInterval(() => {
+          if (vol < 0.4) {
+            vol += 0.02;
+            music.volume = vol;
+          } else {
+            clearInterval(fade);
+          }
+        }, 200);
+      }).catch(() => {});
     }
-  }, 200);
-};
+
+    flipCard();
+  };
+
+  cardScene.addEventListener("click", startHandler);
+  cardScene.addEventListener("touchstart", startHandler);
+}
 
 // =======================
 // 🔄 FLIP CARD + FLOW
@@ -27,25 +43,31 @@ function flipCard() {
   const card = document.querySelector(".card");
   const sound = document.getElementById("open-sound");
 
+  if (!card) return;
+
   card.classList.add("is-flipped");
 
   if (sound) {
     sound.currentTime = 0;
-    sound.play();
+    sound.play().catch(() => {});
   }
 
   // 🎁 STEP 1 → SHOW SECOND CARD
   setTimeout(() => {
-    document.querySelector(".card-scene").style.display = "none";
-    document.querySelector(".second-card").style.display = "flex";
+    const scene = document.querySelector(".card-scene");
+    const second = document.querySelector(".second-card");
+
+    if (scene) scene.style.display = "none";
+    if (second) second.style.display = "flex";
   }, 2000);
 
   // 📸 STEP 2 → SHOW PHOTO SECTION
   setTimeout(() => {
-    document.querySelector(".second-card").style.display = "none";
-
+    const second = document.querySelector(".second-card");
     const photoSection = document.getElementById("photo-section");
-    photoSection.style.display = "flex";
+
+    if (second) second.style.display = "none";
+    if (photoSection) photoSection.style.display = "flex";
 
     initPhotos();
     startSlider();
@@ -85,19 +107,7 @@ function createGlitter() {
   setTimeout(() => sparkle.remove(), 2000);
 }
 
-// reduced frequency → cleaner look
 setInterval(createGlitter, 500);
-
-// =======================
-// 🧠 CUSTOM NAME
-// =======================
-function setCustomName(name) {
-  const nameSpan = document.getElementById("custom-name");
-  if (nameSpan) {
-    nameSpan.textContent = name;
-  }
-}
-setCustomName("Prathish");
 
 // =======================
 // 📸 PHOTO SLIDER
@@ -173,17 +183,12 @@ document.querySelectorAll(".photo-box").forEach((box) => {
   box.addEventListener("click", () => {
     let now = new Date().getTime();
 
-    // ❤️ DOUBLE TAP
     if (now - lastTap < 300) {
       heart.classList.add("show");
-      setTimeout(() => {
-        heart.classList.remove("show");
-      }, 800);
+      setTimeout(() => heart.classList.remove("show"), 800);
     }
 
     lastTap = now;
-
-    // 🔍 ZOOM
     img.classList.toggle("zoom");
   });
 });

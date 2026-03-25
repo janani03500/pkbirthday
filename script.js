@@ -1,32 +1,49 @@
 // 🎧 ELEMENTS
 const music = document.getElementById("music");
 const boomSound = document.getElementById("boomSound");
+const btnCard = document.getElementById("btn-card");
+const startOverlay = document.getElementById("start-overlay");
 
-// 🎧 AUDIO CONTEXT (BEAT DETECTION)
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const analyser = audioCtx.createAnalyser();
-const source = audioCtx.createMediaElementSource(music);
+// 🎧 AUDIO CONTEXT (SAFE INIT)
+let audioCtx, analyser, source, dataArray;
 
-source.connect(analyser);
-analyser.connect(audioCtx.destination);
+function initAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  source = audioCtx.createMediaElementSource(music);
 
-analyser.fftSize = 256;
-const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  source.connect(analyser);
+  analyser.connect(audioCtx.destination);
 
-// START
+  analyser.fftSize = 256;
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
+}
+
+// =======================
+// 🚀 START APP (MOBILE SAFE)
+// =======================
 function startApp() {
-  document.getElementById("start-overlay").style.display = "none";
+  if (!music) return;
 
-  // Resume audio context for mobile autoplay
+  startOverlay.style.display = "none";
+
+  initAudio();
+
   audioCtx.resume().then(() => {
-    music.play();
+    music.play().catch(() => {});
     detectBeat();
   });
 
   startCountdown();
 }
 
-// COUNTDOWN
+// 👉 attach event (IMPORTANT for mobile)
+startOverlay.addEventListener("click", startApp);
+startOverlay.addEventListener("touchstart", startApp);
+
+// =======================
+// ⏳ COUNTDOWN
+// =======================
 function startCountdown() {
   let time = 10;
   const timer = document.getElementById("timer");
@@ -47,18 +64,20 @@ function startCountdown() {
   }, 1000);
 }
 
-// 🎧 BEAT DETECTION
+// =======================
+// 🎧 BEAT DETECTION (OPTIMIZED)
+// =======================
 let lastBeat = 0;
 
 function detectBeat() {
   requestAnimationFrame(detectBeat);
 
+  if (!analyser) return;
+
   analyser.getByteFrequencyData(dataArray);
 
   let bass = 0;
-  for (let i = 0; i < 10; i++) {
-    bass += dataArray[i];
-  }
+  for (let i = 0; i < 10; i++) bass += dataArray[i];
   bass = bass / 10;
 
   let now = Date.now();
@@ -69,7 +88,9 @@ function detectBeat() {
   }
 }
 
-// WISH
+// =======================
+// 🎉 SHOW WISH
+// =======================
 function showWish() {
   document.getElementById("countdown").style.display = "none";
   document.getElementById("wish").style.display = "flex";
@@ -77,18 +98,18 @@ function showWish() {
   startFireworks();
   showPKReveal();
 
-  // 🎁 SHOW BUTTON AFTER 5 SEC
   setTimeout(() => {
-    document.getElementById("btn-card").style.display = "block";
-  }, 5000);
+    btnCard.style.display = "block";
+  }, 4000);
 }
 
-// 🎁 BUTTON CLICK (WITH EFFECT)
+// =======================
+// 🎁 OPEN CARD
+// =======================
 function openCard() {
-  // 💥 FINAL FIREWORK
-  explode(canvas.width / 2, canvas.height / 2, 100);
+  explode(canvas.width / 2, canvas.height / 2, 80);
 
-  // 🎬 FADE OUT
+  document.body.style.transition = "opacity 1s";
   document.body.style.opacity = "0";
 
   setTimeout(() => {
@@ -96,28 +117,31 @@ function openCard() {
   }, 1000);
 }
 
-// Add both click and touch support for mobile
-const btnCard = document.getElementById("btn-card");
-btnCard.addEventListener("click", openCard);
-btnCard.addEventListener("touchstart", openCard);
+// attach safely
+if (btnCard) {
+  btnCard.addEventListener("click", openCard);
+  btnCard.addEventListener("touchstart", openCard);
+}
 
-// 🎆 CANVAS
+// =======================
+// 🎆 CANVAS SETUP
+// =======================
 const canvas = document.getElementById("fireworks-canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-// Resize canvas on orientation change
-window.addEventListener("resize", () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-});
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let particles = [];
 let rockets = [];
 
-// PARTICLE
+// =======================
+// ✨ PARTICLE
+// =======================
 class Particle {
   constructor(x, y, color, v) {
     this.x = x;
@@ -130,7 +154,7 @@ class Particle {
   draw() {
     ctx.globalAlpha = this.alpha;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
@@ -138,18 +162,20 @@ class Particle {
   update() {
     this.x += this.v.x;
     this.y += this.v.y;
-    this.alpha -= 0.015;
+    this.alpha -= 0.02;
   }
 }
 
-// ROCKET
+// =======================
+// 🚀 ROCKET
+// =======================
 class Rocket {
   constructor(x) {
     this.x = x;
     this.y = canvas.height;
     this.velocity = {
       x: (Math.random() - 0.5) * 1,
-      y: -8 - Math.random() * 2
+      y: -7 - Math.random() * 2
     };
     this.color = "#FFD700";
   }
@@ -173,15 +199,21 @@ class Rocket {
   }
 }
 
+// =======================
 // 🔊 SOUND
+// =======================
 function playFireworkSound() {
+  if (!boomSound) return;
+
   boomSound.currentTime = 0;
   boomSound.volume = 0.3;
-  boomSound.play();
+  boomSound.play().catch(() => {});
 }
 
-// 💥 EXPLOSION
-function explode(x, y, count = 40) { // reduced for smoother mobile performance
+// =======================
+// 💥 EXPLOSION (OPTIMIZED)
+// =======================
+function explode(x, y, count = 30) {
   playFireworkSound();
 
   const colors = ["#ff4d4d", "#ffd633", "#33ccff", "#ff66ff"];
@@ -194,7 +226,9 @@ function explode(x, y, count = 40) { // reduced for smoother mobile performance
   }
 }
 
-// 🎯 CONTROLLED FIREWORK
+// =======================
+// 🎯 FIREWORK CONTROL
+// =======================
 let lastFireworkTime = 0;
 
 function beatFireworks() {
@@ -206,16 +240,17 @@ function beatFireworks() {
   }
 }
 
-// 🎆 START LOOP
+// =======================
+// 🎆 LOOP
+// =======================
 function startFireworks() {
   animateFireworks();
 }
 
-// 🎞️ ANIMATION LOOP
 function animateFireworks() {
   requestAnimationFrame(animateFireworks);
 
-  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillStyle = "rgba(0,0,0,0.3)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   rockets = rockets.filter(r => {
@@ -233,7 +268,9 @@ function animateFireworks() {
   drawWishText();
 }
 
-// ✨ TEXT
+// =======================
+// ✨ TEXT ANIMATION
+// =======================
 let message = "🎉 Happy Birthday PK 🎉";
 let displayText = "";
 let index = 0;
@@ -241,10 +278,10 @@ let index = 0;
 function drawWishText() {
   ctx.save();
 
-  ctx.font = "bold 56px Arial";
+  ctx.font = "bold 40px Arial"; // 🔥 reduced for mobile
   ctx.textAlign = "center";
   ctx.shadowColor = "#ff66ff";
-  ctx.shadowBlur = 25;
+  ctx.shadowBlur = 20;
   ctx.fillStyle = "#FFD700";
 
   if (index < message.length && Math.random() < 0.3) {
@@ -257,9 +294,11 @@ function drawWishText() {
   ctx.restore();
 }
 
+// =======================
 // 💥 BIG REVEAL
+// =======================
 function showPKReveal() {
   setTimeout(() => {
-    explode(canvas.width / 2, canvas.height / 2, 120);
+    explode(canvas.width / 2, canvas.height / 2, 80);
   }, 2000);
 }

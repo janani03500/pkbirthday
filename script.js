@@ -1,3 +1,4 @@
+```javascript
 // =======================
 // 🎧 ELEMENTS
 // =======================
@@ -7,11 +8,17 @@ const btnCard = document.getElementById("btn-card");
 const startOverlay = document.getElementById("start-overlay");
 
 // =======================
-// 🎧 AUDIO SYSTEM (SAFE)
+// 🎧 AUDIO SYSTEM
 // =======================
 let audioCtx, analyser, source, dataArray;
-let started = false; // ✅ prevent double start
+let started = false;
 
+// ✅ CONTROL TEXT DISPLAY
+let showText = false;
+
+// =======================
+// 🎧 INIT AUDIO
+// =======================
 function initAudio() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -26,10 +33,10 @@ function initAudio() {
 }
 
 // =======================
-// 🚀 START APP (100% MOBILE FIX)
+// 🚀 START APP
 // =======================
 function startApp() {
-  if (started) return; // ✅ prevent double tap bug
+  if (started) return;
   started = true;
 
   if (!music) return;
@@ -38,37 +45,23 @@ function startApp() {
 
   initAudio();
 
-  // ✅ IMPORTANT: unlock audio
   audioCtx.resume().then(() => {
-
-    // 🎧 FORCE PLAY (mobile safe)
     music.muted = false;
     music.volume = 1;
     music.currentTime = 0;
 
-    const playPromise = music.play();
-
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          console.log("🎵 Music started");
-          detectBeat();
-        })
-        .catch(() => {
-          console.log("⚠️ Autoplay blocked, retrying...");
-
-          // 🔁 fallback retry on next tap
-          document.body.addEventListener("pointerdown", () => {
-            music.play();
-          }, { once: true });
-        });
-    }
+    music.play().then(() => {
+      detectBeat();
+    }).catch(() => {
+      document.body.addEventListener("pointerdown", () => {
+        music.play();
+      }, { once: true });
+    });
   });
 
   startCountdown();
 }
 
-// ✅ BEST MOBILE EVENT
 startOverlay.addEventListener("pointerdown", startApp);
 
 // =======================
@@ -126,6 +119,8 @@ function showWish() {
   document.getElementById("countdown").style.display = "none";
   document.getElementById("wish").style.display = "flex";
 
+  showText = true; // ✅ SHOW TEXT ONLY NOW
+
   startFireworks();
   showPKReveal();
 
@@ -140,7 +135,6 @@ function showWish() {
 function openCard() {
   explode(canvas.width / 2, canvas.height / 2, 80);
 
-  document.body.style.transition = "opacity 1s";
   document.body.style.opacity = "0";
 
   setTimeout(() => {
@@ -231,7 +225,7 @@ class Rocket {
 }
 
 // =======================
-// 🔊 FIREWORK SOUND (FIXED)
+// 🔊 SOUND
 // =======================
 function playFireworkSound() {
   if (!boomSound) return;
@@ -240,7 +234,6 @@ function playFireworkSound() {
   boomSound.volume = 0.4;
 
   boomSound.play().catch(() => {
-    // fallback retry
     document.body.addEventListener("pointerdown", () => {
       boomSound.play();
     }, { once: true });
@@ -306,13 +299,15 @@ function animateFireworks() {
 }
 
 // =======================
-// ✨ TEXT
+// ✨ TEXT (FIXED)
 // =======================
 let message = "🎉 Happy Birthday PK 🎉";
 let displayText = "";
 let index = 0;
 
 function drawWishText() {
+  if (!showText) return; // ❌ STOP EARLY DRAW
+
   ctx.save();
 
   ctx.font = "bold 36px Arial";
@@ -340,3 +335,4 @@ function showPKReveal() {
     explode(canvas.width / 2, canvas.height / 2, 80);
   }, 2000);
 }
+```

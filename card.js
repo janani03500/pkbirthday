@@ -55,7 +55,7 @@ function startHandler() {
 }
 
 // =======================
-// 🔄 FLIP CARD FLOW
+// 🔄 FLIP FLOW
 // =======================
 function flipCard() {
   const card = document.querySelector(".card");
@@ -73,11 +73,13 @@ function flipCard() {
     sound.play().catch(() => {});
   }
 
+  // 🎁 SECOND CARD
   setTimeout(() => {
     document.getElementById("cardScene").style.display = "none";
     document.getElementById("secondCard").style.display = "flex";
   }, 2200);
 
+  // 📸 PHOTO SECTION
   setTimeout(() => {
     document.getElementById("secondCard").style.display = "none";
     document.getElementById("photo-section").style.display = "flex";
@@ -95,7 +97,6 @@ let current = 0;
 let photos = [];
 let interval = null;
 let isPlaying = true;
-let messageShown = false; // ✅ prevent duplicate
 
 function initPhotos() {
   photos = document.querySelectorAll(".photo");
@@ -108,7 +109,7 @@ function initPhotos() {
 }
 
 // =======================
-// ✅ EVENTS
+// ✅ PHOTO EVENTS
 // =======================
 function attachPhotoEvents() {
   document.querySelectorAll(".photo-box").forEach((box) => {
@@ -120,64 +121,63 @@ function attachPhotoEvents() {
     box.addEventListener("click", () => {
       let now = Date.now();
 
+      // ❤️ DOUBLE TAP
       if (now - lastTap < 300) {
         heart.classList.add("show");
         setTimeout(() => heart.classList.remove("show"), 800);
       }
 
       lastTap = now;
+
+      // 🔍 ZOOM
       img.classList.toggle("zoom");
     });
   });
 }
 
 // =======================
-// ▶ SLIDER
+// ▶ AUTO SLIDER (FIXED)
 // =======================
 function startSlider() {
   if (photos.length === 0) return;
 
   clearInterval(interval);
-  interval = setInterval(nextPhoto, 5000);
+
+  interval = setInterval(() => {
+
+    // 🛑 STOP at last photo
+    if (current === photos.length - 1) {
+      clearInterval(interval);
+
+      setTimeout(showFinalMessage, 2000);
+      return;
+    }
+
+    nextPhoto();
+
+  }, 5000);
 }
 
 // =======================
-// ⏭ NEXT (FIXED)
+// ⏭ NEXT
 // =======================
 function nextPhoto() {
-  if (photos.length === 0) return;
-
   photos[current].classList.remove("active");
 
-  // ✅ LAST PHOTO → SHOW MESSAGE
-  if (current === photos.length - 1) {
-    clearInterval(interval);
-
-    if (!messageShown) {
-      messageShown = true;
-      showFinalMessage();
-    }
-
-    return;
-  }
-
   current++;
-  photos[current].classList.add("active");
+
+  if (current < photos.length) {
+    photos[current].classList.add("active");
+  }
 }
 
 // =======================
 // ⏮ PREV
 // =======================
 function prevPhoto() {
-  if (photos.length === 0) return;
-
   photos[current].classList.remove("active");
 
-  if (current === 0) {
-    current = photos.length - 1;
-  } else {
-    current--;
-  }
+  current = (current - 1 + photos.length) % photos.length;
 
   photos[current].classList.add("active");
 }
@@ -200,56 +200,46 @@ function toggleSlider() {
 }
 
 // =======================
-// 💬 FINAL MESSAGE
+// 💌 FINAL MESSAGE
 // =======================
 function showFinalMessage() {
-  const section = document.getElementById("photo-section");
+  document.getElementById("photo-section").style.display = "none";
 
-  const messageBox = document.createElement("div");
-  messageBox.className = "final-message";
+  const final = document.getElementById("finalMessage");
+  final.style.display = "flex";
 
-  messageBox.innerHTML = `<span id="typingText"></span>`;
-
-  section.appendChild(messageBox);
-
-  typeMessage("You are not just my best friend... 💖 You are my home. Forever PK 💫");
+  startTyping(); // 🔥 FIXED NAME
 }
 
 // =======================
-// ✍️ TYPING EFFECT
+// ✨ TYPEWRITER (FIXED)
 // =======================
-function typeMessage(text) {
-  let i = 0;
+const messageText = `Happy Birthday PK 💖
+
+You are my best friend,
+my home, my happiness ✨
+
+No matter how much we fight,
+I can never leave you 🫂
+
+Forever Tom & Jerry 💛`;
+
+let index = 0;
+
+function startTyping() {
   const el = document.getElementById("typingText");
 
-  function typing() {
-    if (i < text.length) {
-      el.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, 50);
+  el.innerHTML = ""; // 🔥 IMPORTANT RESET
+
+  function type() {
+    if (index < messageText.length) {
+      el.innerHTML += messageText.charAt(index);
+      index++;
+      setTimeout(type, 40);
     }
   }
 
-  typing();
-}
-
-// =======================
-// 👆 SWIPE
-// =======================
-let startX = 0;
-const slider = document.getElementById("slider");
-
-if (slider) {
-  slider.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  });
-
-  slider.addEventListener("touchend", e => {
-    let endX = e.changedTouches[0].clientX;
-
-    if (startX - endX > 50) nextPhoto();
-    else if (endX - startX > 50) prevPhoto();
-  });
+  type();
 }
 
 // =======================
@@ -268,11 +258,3 @@ function createGlitter() {
 }
 
 setInterval(createGlitter, 800);
-
-// =======================
-// ❌ EXIT
-// =======================
-function exitPhotos() {
-  const section = document.getElementById("photo-section");
-  if (section) section.style.display = "none";
-}

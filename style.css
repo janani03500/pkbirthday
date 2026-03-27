@@ -1,3 +1,4 @@
+```css
 /* =======================
    🔧 GLOBAL RESET
 ======================= */
@@ -15,8 +16,8 @@ html, body {
   height: 100%;
   width: 100%;
 
-  overflow: hidden; /* 🔥 IMPORTANT FIX (prevents scroll bugs) */
-  -webkit-tap-highlight-color: transparent; /* 📱 remove tap highlight */
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 
   transition: opacity 1s ease;
 }
@@ -26,7 +27,7 @@ html, body {
 ======================= */
 #start-overlay {
   position: fixed;
-  inset: 0; /* ✅ better than top/left/width/height */
+  inset: 0;
 
   background: linear-gradient(45deg, #ff4757, #ff6b81);
 
@@ -41,11 +42,9 @@ html, body {
 #start-overlay h1 {
   font-size: clamp(1.8rem, 5vw, 3rem);
   text-align: center;
-
   color: white;
 
   text-shadow: 0 0 15px #fff, 0 0 30px #ffd633;
-
   animation: pulse 2s infinite;
 }
 
@@ -53,12 +52,11 @@ html, body {
    ⏳ COUNTDOWN
 ======================= */
 #countdown {
-  display: none;
+  display: none; /* ✅ controlled by JS */
 
   position: fixed;
   inset: 0;
 
-  display: flex;
   justify-content: center;
   align-items: center;
 
@@ -94,7 +92,6 @@ html, body {
   position: fixed;
   inset: 0;
 
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -106,7 +103,6 @@ html, body {
   z-index: 5;
 }
 
-/* TEXT */
 #wish-text {
   font-size: clamp(1.8rem, 5vw, 3rem);
 
@@ -143,7 +139,7 @@ html, body {
   width: 80%;
   max-width: 250px;
 
-  z-index: 6; /* 🔥 ABOVE CANVAS */
+  z-index: 6; /* above canvas */
 }
 
 #btn-card:hover {
@@ -197,3 +193,5 @@ html, body {
     bottom: 15px;
   }
 }
+```
+

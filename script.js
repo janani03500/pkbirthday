@@ -1,19 +1,31 @@
-```javascript
 // =======================
-// 🎧 ELEMENTS
+// 🎧 ELEMENTS (SAFE LOAD)
 // =======================
-const music = document.getElementById("music");
-const boomSound = document.getElementById("boomSound");
-const btnCard = document.getElementById("btn-card");
-const startOverlay = document.getElementById("start-overlay");
+let music, boomSound, btnCard, startOverlay;
+
+document.addEventListener("DOMContentLoaded", () => {
+  music = document.getElementById("music");
+  boomSound = document.getElementById("boomSound");
+  btnCard = document.getElementById("btn-card");
+  startOverlay = document.getElementById("start-overlay");
+
+  // ✅ SAFE EVENT ATTACH
+  if (startOverlay) {
+    startOverlay.addEventListener("click", startApp);
+    startOverlay.addEventListener("touchstart", startApp);
+  }
+
+  if (btnCard) {
+    btnCard.addEventListener("click", openCard);
+    btnCard.addEventListener("touchstart", openCard);
+  }
+});
 
 // =======================
 // 🎧 AUDIO SYSTEM
 // =======================
 let audioCtx, analyser, source, dataArray;
 let started = false;
-
-// ✅ CONTROL TEXT DISPLAY
 let showText = false;
 
 // =======================
@@ -36,10 +48,12 @@ function initAudio() {
 // 🚀 START APP
 // =======================
 function startApp() {
+  console.log("🔥 TAP WORKING");
+
   if (started) return;
   started = true;
 
-  if (!music) return;
+  if (!music || !startOverlay) return;
 
   startOverlay.style.display = "none";
 
@@ -53,7 +67,7 @@ function startApp() {
     music.play().then(() => {
       detectBeat();
     }).catch(() => {
-      document.body.addEventListener("pointerdown", () => {
+      document.body.addEventListener("click", () => {
         music.play();
       }, { once: true });
     });
@@ -62,16 +76,17 @@ function startApp() {
   startCountdown();
 }
 
-startOverlay.addEventListener("pointerdown", startApp);
-
 // =======================
 // ⏳ COUNTDOWN
 // =======================
 function startCountdown() {
   let time = 10;
   const timer = document.getElementById("timer");
+  const countdown = document.getElementById("countdown");
 
-  document.getElementById("countdown").style.display = "flex";
+  if (!timer || !countdown) return;
+
+  countdown.style.display = "flex";
 
   let t = setInterval(() => {
     time--;
@@ -116,16 +131,19 @@ function detectBeat() {
 // 🎉 SHOW WISH
 // =======================
 function showWish() {
-  document.getElementById("countdown").style.display = "none";
-  document.getElementById("wish").style.display = "flex";
+  const countdown = document.getElementById("countdown");
+  const wish = document.getElementById("wish");
 
-  showText = true; // ✅ SHOW TEXT ONLY NOW
+  if (countdown) countdown.style.display = "none";
+  if (wish) wish.style.display = "flex";
+
+  showText = true;
 
   startFireworks();
   showPKReveal();
 
   setTimeout(() => {
-    btnCard.style.display = "block";
+    if (btnCard) btnCard.style.display = "block";
   }, 4000);
 }
 
@@ -140,10 +158,6 @@ function openCard() {
   setTimeout(() => {
     window.location.href = "card.html";
   }, 1000);
-}
-
-if (btnCard) {
-  btnCard.addEventListener("pointerdown", openCard);
 }
 
 // =======================
@@ -232,12 +246,7 @@ function playFireworkSound() {
 
   boomSound.currentTime = 0;
   boomSound.volume = 0.4;
-
-  boomSound.play().catch(() => {
-    document.body.addEventListener("pointerdown", () => {
-      boomSound.play();
-    }, { once: true });
-  });
+  boomSound.play().catch(() => {});
 }
 
 // =======================
@@ -299,14 +308,14 @@ function animateFireworks() {
 }
 
 // =======================
-// ✨ TEXT (FIXED)
+// ✨ TEXT
 // =======================
 let message = "🎉 Happy Birthday PK 🎉";
 let displayText = "";
 let index = 0;
 
 function drawWishText() {
-  if (!showText) return; // ❌ STOP EARLY DRAW
+  if (!showText) return;
 
   ctx.save();
 
@@ -335,4 +344,3 @@ function showPKReveal() {
     explode(canvas.width / 2, canvas.height / 2, 80);
   }, 2000);
 }
-```

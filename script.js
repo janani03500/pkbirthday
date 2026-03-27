@@ -344,3 +344,6 @@ function showPKReveal() {
     explode(canvas.width / 2, canvas.height / 2, 80);
   }, 2000);
 }
+document.addEventListener("click", () => {
+  console.log("🔥 CLICK DETECTED");
+});

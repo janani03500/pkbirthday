@@ -11,20 +11,22 @@ let started = false;
 let showText = false;
 
 // =======================
-// 🚀 START (🔥 FIXED)
+// 🚀 START APP
 // =======================
 function startApp() {
   if (started) return;
   started = true;
 
-  // 🔥 hide overlay
-  startOverlay.style.opacity = "0";
-  setTimeout(() => startOverlay.style.display = "none", 500);
+  // 🔥 hide overlay smoothly
+  if (startOverlay) {
+    startOverlay.style.opacity = "0";
+    setTimeout(() => startOverlay.style.display = "none", 500);
+  }
 
-  // 🔥 ALWAYS START COUNTDOWN (IMPORTANT)
+  // 🔥 ALWAYS START COUNTDOWN (IMPORTANT FIX)
   startCountdown();
 
-  // 🎧 TRY PLAY MUSIC (independent)
+  // 🎧 TRY MUSIC (independent)
   if (music) {
     music.muted = false;
     music.volume = 1;
@@ -33,13 +35,13 @@ function startApp() {
       initAudio();
       detectBeat();
     }).catch(() => {
-      console.log("Music blocked, countdown still works ✅");
+      console.log("Music blocked (mobile), but app continues ✅");
     });
   }
 }
 
 // =======================
-// 🎧 AUDIO
+// 🎧 AUDIO SETUP
 // =======================
 function initAudio() {
   try {
@@ -60,7 +62,7 @@ function initAudio() {
 }
 
 // =======================
-// ⏳ COUNTDOWN (🔥 FIXED)
+// ⏳ COUNTDOWN
 // =======================
 function startCountdown() {
   let time = 10;
@@ -72,7 +74,6 @@ function startCountdown() {
 
   // 🔥 FORCE SHOW
   countdown.style.display = "flex";
-
   timer.innerText = time;
 
   let t = setInterval(() => {
@@ -127,29 +128,35 @@ function showWish() {
   showText = true;
   animate();
 
-  setTimeout(() => {
-    if (btnCard) btnCard.style.display = "block";
-  }, 3000);
+  // 🔥 SHOW BUTTON (no delay issue)
+  if (btnCard) {
+    setTimeout(() => {
+      btnCard.style.display = "block";
+    }, 2000);
+  }
 }
 
 // =======================
 // 🎁 OPEN CARD
 // =======================
 function openCard() {
+  console.log("Button clicked ✅");
+
   document.body.style.opacity = "0";
 
   setTimeout(() => {
-    window.location.href = "card.html"; // 🔥 FIXED redirect
-  }, 1000);
+    window.location.href = "card.html"; // 🔥 FINAL FIX
+  }, 800);
 }
 
 // =======================
-// 🎆 CANVAS
+// 🎆 CANVAS SETUP
 // =======================
 const canvas = document.getElementById("fireworks-canvas");
 const ctx = canvas.getContext("2d");
 
 function resizeCanvas() {
+  if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
@@ -190,7 +197,10 @@ class Rocket {
   constructor(x) {
     this.x = x;
     this.y = canvas.height;
-    this.velocity = { x: (Math.random()-0.5)*2, y: -8 };
+    this.velocity = {
+      x: (Math.random() - 0.5) * 2,
+      y: -8
+    };
   }
 
   draw() {
@@ -216,33 +226,38 @@ class Rocket {
 function explode(x, y) {
   if (boomSound) {
     boomSound.currentTime = 0;
-    boomSound.play().catch(()=>{});
+    boomSound.play().catch(() => {});
   }
 
-  let colors = ["red","yellow","cyan","pink"];
+  let colors = ["red", "yellow", "cyan", "pink"];
 
-  for (let i=0;i<50;i++) {
-    particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)],{
-      x:(Math.random()-0.5)*5,
-      y:(Math.random()-0.5)*5
+  for (let i = 0; i < 50; i++) {
+    particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
+      x: (Math.random() - 0.5) * 5,
+      y: (Math.random() - 0.5) * 5
     }));
   }
 }
 
 // =======================
-// 🎆 ANIMATION
+// 🎆 ANIMATION LOOP
 // =======================
 function animate() {
   requestAnimationFrame(animate);
 
+  if (!ctx) return;
+
   ctx.fillStyle = "rgba(0,0,0,0.3)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   rockets = rockets.filter(r => !r.update());
   rockets.forEach(r => r.draw());
 
-  particles = particles.filter(p => p.alpha>0);
-  particles.forEach(p => {p.update(); p.draw();});
+  particles = particles.filter(p => p.alpha > 0);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
 
   drawText();
 }
@@ -265,14 +280,16 @@ function drawText() {
     txt += msg[i++];
   }
 
-  ctx.fillText(txt, canvas.width/2, canvas.height/2);
+  ctx.fillText(txt, canvas.width / 2, canvas.height / 2);
 }
 
 // =======================
-// 🎯 EVENTS
+// 🎯 EVENTS (🔥 FIXED)
 // =======================
-startOverlay.addEventListener("click", startApp, { once: true });
-startOverlay.addEventListener("touchstart", startApp, { once: true });
+if (startOverlay) {
+  startOverlay.addEventListener("click", startApp, { once: true });
+}
 
-btnCard.addEventListener("click", openCard);
-btnCard.addEventListener("touchstart", openCard);
+if (btnCard) {
+  btnCard.addEventListener("click", openCard); // 🔥 ONLY CLICK (no touch bug)
+}

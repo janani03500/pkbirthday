@@ -2,12 +2,15 @@
 // 🎧 MUSIC
 // =======================
 const music = document.getElementById("card-music");
+const openSound = document.getElementById("open-sound");
+
+let opened = false;
 
 // =======================
 // 💖 FLOATING HEARTS
 // =======================
 function createFloatingHearts() {
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 10; i++) {
     const heart = document.createElement("div");
     heart.className = "heart-float";
     heart.innerText = "💖";
@@ -20,24 +23,26 @@ function createFloatingHearts() {
 }
 
 // =======================
-// 🎯 START HANDLER
+// 🎯 START HANDLER (MOBILE FIX)
 // =======================
 const cardScene = document.getElementById("cardScene");
-let opened = false;
 
 if (cardScene) {
-  cardScene.addEventListener("pointerdown", startHandler);
+  cardScene.addEventListener("click", startHandler);
+  cardScene.addEventListener("touchstart", startHandler);
 }
 
 function startHandler() {
   if (opened) return;
   opened = true;
 
+  // 🎵 MUSIC START (MOBILE SAFE)
   if (music) {
+    music.muted = false;
     music.volume = 0;
 
     music.play().then(() => {
-      music.currentTime = 1.5;
+      music.currentTime = 1;
 
       let vol = 0;
       let fade = setInterval(() => {
@@ -59,35 +64,52 @@ function startHandler() {
 // =======================
 function flipCard() {
   const card = document.querySelector(".card");
-  const sound = document.getElementById("open-sound");
-
   if (!card) return;
 
   card.classList.add("is-flipped");
 
+  // 💖 hearts
   createFloatingHearts();
   setTimeout(createFloatingHearts, 300);
 
-  if (sound) {
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
+  // 🔊 sound
+  if (openSound) {
+    openSound.currentTime = 0;
+    openSound.play().catch(() => {});
   }
 
-  // 🎁 SECOND CARD
+  // 🎁 SECOND CARD (smooth fade)
   setTimeout(() => {
-    document.getElementById("cardScene").style.display = "none";
-    document.getElementById("secondCard").style.display = "flex";
-  }, 2200);
+    const scene = document.getElementById("cardScene");
+    const second = document.getElementById("secondCard");
+
+    if (scene && second) {
+      scene.style.opacity = "0";
+      setTimeout(() => {
+        scene.style.display = "none";
+        second.style.display = "flex";
+      }, 500);
+    }
+  }, 2000);
 
   // 📸 PHOTO SECTION
   setTimeout(() => {
-    document.getElementById("secondCard").style.display = "none";
-    document.getElementById("photo-section").style.display = "flex";
+    const second = document.getElementById("secondCard");
+    const photo = document.getElementById("photo-section");
 
-    initPhotos();
-    attachPhotoEvents();
-    startSlider();
-  }, 6500);
+    if (second && photo) {
+      second.style.opacity = "0";
+
+      setTimeout(() => {
+        second.style.display = "none";
+        photo.style.display = "flex";
+
+        initPhotos();
+        attachPhotoEvents();
+        startSlider();
+      }, 500);
+    }
+  }, 6000);
 }
 
 // =======================
@@ -109,7 +131,7 @@ function initPhotos() {
 }
 
 // =======================
-// ✅ PHOTO EVENTS
+// 📸 PHOTO EVENTS
 // =======================
 function attachPhotoEvents() {
   document.querySelectorAll(".photo-box").forEach((box) => {
@@ -121,7 +143,7 @@ function attachPhotoEvents() {
     box.addEventListener("click", () => {
       let now = Date.now();
 
-      // ❤️ DOUBLE TAP
+      // ❤️ DOUBLE TAP LIKE
       if (now - lastTap < 300) {
         heart.classList.add("show");
         setTimeout(() => heart.classList.remove("show"), 800);
@@ -136,7 +158,7 @@ function attachPhotoEvents() {
 }
 
 // =======================
-// ▶ AUTO SLIDER (FIXED)
+// ▶ AUTO SLIDER
 // =======================
 function startSlider() {
   if (photos.length === 0) return;
@@ -145,17 +167,15 @@ function startSlider() {
 
   interval = setInterval(() => {
 
-    // 🛑 STOP at last photo
     if (current === photos.length - 1) {
       clearInterval(interval);
-
       setTimeout(showFinalMessage, 2000);
       return;
     }
 
     nextPhoto();
 
-  }, 5000);
+  }, 4000);
 }
 
 // =======================
@@ -190,10 +210,10 @@ function toggleSlider() {
 
   if (isPlaying) {
     clearInterval(interval);
-    if (btn) btn.innerText = "▶ Play";
+    if (btn) btn.innerText = "▶";
   } else {
     startSlider();
-    if (btn) btn.innerText = "⏸ Pause";
+    if (btn) btn.innerText = "⏸";
   }
 
   isPlaying = !isPlaying;
@@ -203,16 +223,18 @@ function toggleSlider() {
 // 💌 FINAL MESSAGE
 // =======================
 function showFinalMessage() {
-  document.getElementById("photo-section").style.display = "none";
-
+  const photo = document.getElementById("photo-section");
   const final = document.getElementById("finalMessage");
-  final.style.display = "flex";
 
-  startTyping(); // 🔥 FIXED NAME
+  if (photo) photo.style.display = "none";
+  if (final) {
+    final.style.display = "flex";
+    startTyping();
+  }
 }
 
 // =======================
-// ✨ TYPEWRITER (FIXED)
+// ✨ TYPEWRITER
 // =======================
 const messageText = `Happy Birthday PK 💖
 
@@ -228,8 +250,10 @@ let index = 0;
 
 function startTyping() {
   const el = document.getElementById("typingText");
+  if (!el) return;
 
-  el.innerHTML = ""; // 🔥 IMPORTANT RESET
+  el.innerHTML = "";
+  index = 0;
 
   function type() {
     if (index < messageText.length) {

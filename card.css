@@ -328,3 +328,46 @@ body {
 .card-face {
   scrollbar-width: none;
 }
+/* =======================
+   💌 FINAL MESSAGE
+======================= */
+.final-message {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: radial-gradient(circle, #000, #111);
+
+  z-index: 100;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ✨ TYPING TEXT STYLE */
+#typingText {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  line-height: 1.6;
+
+  background: linear-gradient(90deg, #ffd633, #fff, #ff66ff, #ffd633);
+  background-size: 200% auto;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 4s linear infinite, glowPulse 2s ease-in-out infinite;
+}
+
+/* glow */
+@keyframes glowPulse {
+  0%,100% { text-shadow: 0 0 10px #ff66ff; }
+  50% { text-shadow: 0 0 30px #ff66ff; }
+}
+
+/* shine */
+@keyframes shine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}

@@ -38,26 +38,20 @@ body {
 }
 
 /* =======================
-   ✉️ ENVELOPE
-======================= */
-.envelope {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* =======================
-   💌 CARD
+   💌 CARD (🔥 FIXED)
 ======================= */
 .card {
   width: 90vw;
   max-width: 420px;
-  aspect-ratio: 3 / 4;
+
+  min-height: 65vh;   /* 🔥 MOBILE FIX */
+  height: auto;
 
   position: relative;
   transform-style: preserve-3d;
   transition: transform 1s ease;
+
+  display: flex;
 }
 
 /* FLIP */
@@ -100,14 +94,15 @@ body {
   height: 100%;
 
   border-radius: 20px;
-  overflow: hidden;
+  overflow-y: auto; /* 🔥 scroll fix */
 
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 
-  padding: 20px;
+  padding: 25px 15px; /* 🔥 better spacing */
+  text-align: center;
 
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -117,14 +112,12 @@ body {
 .card-front {
   background: linear-gradient(135deg, #ffdde1, #ee9ca7);
   color: #333;
-  text-align: center;
 }
 
 /* BACK */
 .card-back {
   background: linear-gradient(135deg, #d4fc79, #96e6a1);
   transform: rotateY(180deg);
-  text-align: center;
 }
 
 /* =======================
@@ -132,244 +125,36 @@ body {
 ======================= */
 .card-img {
   width: 100%;
-  max-height: 60%;
+  max-height: 200px;
   object-fit: contain;
 
   border-radius: 12px;
-  pointer-events: none;
+  margin: 10px 0;
 }
 
 /* =======================
-   💖 FLOATING HEARTS
+   📝 TEXT
 ======================= */
-.heart-float {
-  position: fixed;
-  bottom: 0;
-  font-size: 20px;
-  color: #ff4d6d;
-
-  animation: floatUp 3s linear forwards;
-  pointer-events: none;
-  z-index: 200;
-}
-
-@keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-200px) scale(1.8);
-    opacity: 0;
-  }
+.card-face p {
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  line-height: 1.5;
 }
 
 /* =======================
-   🌟 SECOND CARD
+   🔘 BUTTON
 ======================= */
-.second-card {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  background: linear-gradient(to bottom, #1a1a1a, #000);
-  color: white;
-
-  z-index: 20;
-  text-align: center;
-}
-
-.second-card img {
-  width: 80%;
-  max-width: 400px;
-  margin-bottom: 20px;
-}
-
-/* =======================
-   📸 PHOTO SECTION
-======================= */
-.photo-section {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  z-index: 50;
-  background: radial-gradient(circle at center, #111 0%, #000 80%);
-}
-
-/* SLIDER */
-.photo-slider {
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* BOX */
-.photo-box {
-  position: absolute;
-  width: 90%;
-  max-width: 500px;
-  height: 80%;
-
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* IMAGE */
-.photo {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-
-  background: #111;
-
-  opacity: 0;
-  transition: opacity 2.5s ease-in-out, transform 0.4s;
-}
-
-/* ACTIVE IMAGE */
-.photo.active {
-  opacity: 1 !important;
-}
-
-/* ❤️ HEART */
-.heart {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  font-size: 50px;
-
-  transform: translate(-50%, -50%) scale(0);
-  opacity: 0;
-
-  transition: 0.3s;
-}
-
-.heart.show {
-  transform: translate(-50%, -50%) scale(1.5);
-  opacity: 1;
-}
-
-/* =======================
-   🎮 CONTROLS
-======================= */
-.controls {
-  position: absolute;
-  bottom: 30px;
-
-  display: flex;
-  gap: 15px;
-
-  z-index: 100;
-}
-
-.controls button {
-  min-width: 44px;
-  min-height: 44px;
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
 
   border: none;
   border-radius: 25px;
 
-  background: rgba(255,255,255,0.2);
-  color: white;
+  background: gold;
+  color: black;
 
-  backdrop-filter: blur(10px);
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
-}
-
-/* =======================
-   💖 FINAL MESSAGE
-======================= */
-.final-message {
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: none;
-  justify-content: center;
-  align-items: center;
-
-  background: radial-gradient(circle, #000, #111);
-
-  z-index: 100;
-  text-align: center;
-  padding: 20px;
-}
-
-/* ✨ GLOW TEXT */
-#typingText {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  line-height: 1.6;
-
-  background: linear-gradient(90deg, #ffd633, #fff, #ff66ff, #ffd633);
-  background-size: 200% auto;
-
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  animation: shine 4s linear infinite, glowPulse 2s ease-in-out infinite;
-}
-
-/* glow */
-@keyframes glowPulse {
-  0%,100% { text-shadow: 0 0 10px #ff66ff; }
-  50% { text-shadow: 0 0 30px #ff66ff; }
-}
-
-/* shine */
-@keyframes shine {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-
-/* =======================
-   ✨ GLITTER
-======================= */
-.glitter {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-
-  z-index: 1;
-
-  background-image: radial-gradient(white 1px, transparent 1px);
-  background-size: 20px 20px;
-
-  animation: sparkle 3s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes sparkle {
-  from { transform: translateY(0); }
-  to { transform: translateY(-20px); }
 }
 
 /* =======================
@@ -379,23 +164,24 @@ body {
 
   .card {
     width: 95vw;
+    min-height: 70vh; /* 🔥 bigger card */
+  }
+
+  .card-face {
+    padding: 20px 12px;
   }
 
   .card-img {
-    max-height: 200px;
+    max-height: 160px;
   }
+}
 
-  .photo-box {
-    width: 95%;
-    height: 70%;
-  }
-
-  .controls {
-    bottom: 20px;
-    gap: 10px;
-  }
-
-  .controls button {
-    font-size: 14px;
-  }
+/* =======================
+   ✨ SMOOTH SCROLL (HIDE BAR)
+======================= */
+.card-face::-webkit-scrollbar {
+  display: none;
+}
+.card-face {
+  scrollbar-width: none;
 }

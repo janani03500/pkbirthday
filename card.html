@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- ✅ MOBILE FIX -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 📱 MOBILE FIX -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Birthday Card 🎂</title>
   <link rel="stylesheet" href="card.css">
@@ -12,84 +12,63 @@
 
 <body>
 
-  <!-- 🎧 MUSIC -->
-  <audio id="card-music" src="card-music.mp3" loop></audio>
-  <audio id="open-sound" src="open.mp3"></audio>
+  <!-- 🎧 BACKGROUND MUSIC -->
+  <audio id="card-music" loop playsinline>
+    <source src="card-music.mp3" type="audio/mpeg">
+  </audio>
 
-  <!-- 💌 CARD -->
+  <!-- 🔊 CARD OPEN SOUND -->
+  <audio id="open-sound" playsinline>
+    <source src="open.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 💌 FLIP CARD -->
   <div class="card-scene" id="cardScene">
+    <div class="card" id="card">
 
-    <div class="envelope">
+      <!-- FRONT -->
+      <div class="card-face card-front">
+        <h1>🎉 Happy Birthday 🎉</h1>
+        <p>Tap to open 💖</p>
 
-      <div class="card">
+        <!-- 🔥 BIG IMAGE -->
+        <img src="tom-jerry-front.png" alt="Birthday Front" class="card-img">
+      </div>
 
-        <!-- FRONT -->
-        <div class="card-face card-front">
-          <h1>🎉 Happy Birthday 🎉</h1>
-          <p>Tap to open 💖</p>
-          <img src="tom-jerry-front.png" class="card-img">
-        </div>
+      <!-- BACK -->
+      <div class="card-face card-back">
+        <h2>💌 From Jerry to Tom</h2>
 
-        <!-- BACK -->
-        <div class="card-face card-back">
-          <h2>💌 From Jerry to Tom</h2>
-          <img src="tom-jerry-inside.png" class="card-img">
-        </div>
-
+        <!-- 🔥 BIG IMAGE -->
+        <img src="tom-jerry-inside.png" alt="Birthday Inside" class="card-img">
       </div>
 
     </div>
   </div>
 
-  <!-- 🎉 SECOND -->
+  <!-- 🎉 SECOND CARD -->
   <div class="second-card" id="secondCard">
-    <img src="tom-jerry-inside.png" class="card-img">
+    <img src="tom-jerry-inside.png" alt="Memory" class="card-img">
     <h2>✨ Our Beautiful Memories 💖</h2>
   </div>
 
-  <!-- 📸 PHOTOS -->
+  <!-- 📸 PHOTO SECTION -->
   <div class="photo-section" id="photo-section">
 
     <div class="photo-slider" id="slider">
 
-      <div class="photo-box">
-        <img src="pk1.jpg" class="photo active">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk2.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk3.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk4.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk5.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk6.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
-
-      <div class="photo-box">
-        <img src="pk7.jpg" class="photo">
-        <div class="heart">❤️</div>
-      </div>
+      <!-- PHOTOS -->
+      <div class="photo-box"><img src="pk1.jpg" class="photo active"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk2.jpg" class="photo"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk3.jpg" class="photo"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk4.jpg" class="photo"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk5.jpg" class="photo"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk6.jpg" class="photo"><div class="heart">❤️</div></div>
+      <div class="photo-box"><img src="pk7.jpg" class="photo"><div class="heart">❤️</div></div>
 
     </div>
 
-    <!-- CONTROLS -->
+    <!-- 🎮 CONTROLS -->
     <div class="controls">
       <button onclick="prevPhoto()">⏮</button>
       <button onclick="toggleSlider()" id="playBtn">⏸</button>
@@ -98,15 +77,10 @@
 
   </div>
 
-  <!-- 💖 FINAL MESSAGE (🔥 IMPORTANT ADD) -->
-  <div class="final-message" id="finalMessage">
-    <h1 id="typingText"></h1>
-  </div>
-
-  <!-- ✨ EFFECTS -->
-  <div id="floating-hearts"></div>
+  <!-- ✨ GLITTER -->
   <div class="glitter"></div>
 
+  <!-- 🚀 SCRIPT -->
   <script src="card.js"></script>
 
 </body>

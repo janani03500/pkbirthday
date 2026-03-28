@@ -15,14 +15,13 @@ function startApp() {
   startOverlay.style.opacity = "0";
   setTimeout(() => startOverlay.style.display = "none", 500);
 
-  // ✅ MOBILE FIX
   music.muted = false;
   music.volume = 1;
 
   music.play().then(() => {
     initAudio();
+    startCountdown();   // 🔥 START COUNTDOWN FIRST
     detectBeat();
-    startCountdown();
   }).catch(() => {
     document.body.addEventListener("click", () => music.play(), { once: true });
   });
@@ -30,39 +29,57 @@ function startApp() {
 
 // 🎧 AUDIO
 function initAudio() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  analyser = audioCtx.createAnalyser();
-  source = audioCtx.createMediaElementSource(music);
+    analyser = audioCtx.createAnalyser();
+    source = audioCtx.createMediaElementSource(music);
 
-  source.connect(analyser);
-  analyser.connect(audioCtx.destination);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
 
-  analyser.fftSize = 512;
-  dataArray = new Uint8Array(analyser.frequencyBinCount);
+    analyser.fftSize = 512;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  } catch (e) {
+    console.log("Audio error:", e);
+  }
 }
 
-// ⏳ COUNTDOWN
+// ⏳ COUNTDOWN (🔥 FIXED)
 function startCountdown() {
   let time = 10;
-  let timer = document.getElementById("timer");
+
+  const timer = document.getElementById("timer");
+  const countdown = document.getElementById("countdown");
+
+  if (!timer || !countdown) return;
+
+  countdown.style.display = "flex"; // 🔥 IMPORTANT
 
   let t = setInterval(() => {
     time--;
     timer.innerText = time;
 
+    timer.classList.remove("fade-in");
+    void timer.offsetWidth;
+    timer.classList.add("fade-in");
+
     if (time <= 0) {
       clearInterval(t);
+      countdown.style.display = "none";
       showWish();
     }
   }, 1000);
 }
 
-// 🎧 BEAT DETECTION
+// 🎧 BEAT DETECTION (SAFE)
 let lastBeat = 0;
 
 function detectBeat() {
   requestAnimationFrame(detectBeat);
+
+  if (!analyser || !dataArray) return; // 🔥 FIX
 
   analyser.getByteFrequencyData(dataArray);
 
@@ -78,13 +95,19 @@ function detectBeat() {
   }
 }
 
-// 🎉 SHOW WISH
+// 🎉 SHOW WISH (🔥 FIXED)
 function showWish() {
+  const wish = document.getElementById("wish");
+
+  if (wish) {
+    wish.style.display = "flex"; // 🔥 IMPORTANT
+  }
+
   showText = true;
   animate();
 
   setTimeout(() => {
-    btnCard.style.display = "block";
+    if (btnCard) btnCard.style.display = "block";
   }, 3000);
 }
 
@@ -161,8 +184,10 @@ class Rocket {
 
 // 💥 EXPLODE
 function explode(x, y) {
-  boomSound.currentTime = 0;
-  boomSound.play().catch(()=>{});
+  if (boomSound) {
+    boomSound.currentTime = 0;
+    boomSound.play().catch(()=>{});
+  }
 
   let colors = ["red","yellow","cyan","pink"];
 

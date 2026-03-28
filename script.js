@@ -1,3 +1,6 @@
+// =======================
+// 🎧 ELEMENTS
+// =======================
 let music = document.getElementById("music");
 let boomSound = document.getElementById("boomSound");
 let startOverlay = document.getElementById("start-overlay");
@@ -7,27 +10,37 @@ let audioCtx, analyser, source, dataArray;
 let started = false;
 let showText = false;
 
-// 🚀 START
+// =======================
+// 🚀 START (🔥 FIXED)
+// =======================
 function startApp() {
   if (started) return;
   started = true;
 
+  // 🔥 hide overlay
   startOverlay.style.opacity = "0";
   setTimeout(() => startOverlay.style.display = "none", 500);
 
-  music.muted = false;
-  music.volume = 1;
+  // 🔥 ALWAYS START COUNTDOWN (IMPORTANT)
+  startCountdown();
 
-  music.play().then(() => {
-    initAudio();
-    startCountdown();   // 🔥 START COUNTDOWN FIRST
-    detectBeat();
-  }).catch(() => {
-    document.body.addEventListener("click", () => music.play(), { once: true });
-  });
+  // 🎧 TRY PLAY MUSIC (independent)
+  if (music) {
+    music.muted = false;
+    music.volume = 1;
+
+    music.play().then(() => {
+      initAudio();
+      detectBeat();
+    }).catch(() => {
+      console.log("Music blocked, countdown still works ✅");
+    });
+  }
 }
 
+// =======================
 // 🎧 AUDIO
+// =======================
 function initAudio() {
   try {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -46,7 +59,9 @@ function initAudio() {
   }
 }
 
+// =======================
 // ⏳ COUNTDOWN (🔥 FIXED)
+// =======================
 function startCountdown() {
   let time = 10;
 
@@ -55,12 +70,16 @@ function startCountdown() {
 
   if (!timer || !countdown) return;
 
-  countdown.style.display = "flex"; // 🔥 IMPORTANT
+  // 🔥 FORCE SHOW
+  countdown.style.display = "flex";
+
+  timer.innerText = time;
 
   let t = setInterval(() => {
     time--;
     timer.innerText = time;
 
+    // animation
     timer.classList.remove("fade-in");
     void timer.offsetWidth;
     timer.classList.add("fade-in");
@@ -73,13 +92,15 @@ function startCountdown() {
   }, 1000);
 }
 
-// 🎧 BEAT DETECTION (SAFE)
+// =======================
+// 🎧 BEAT DETECTION
+// =======================
 let lastBeat = 0;
 
 function detectBeat() {
   requestAnimationFrame(detectBeat);
 
-  if (!analyser || !dataArray) return; // 🔥 FIX
+  if (!analyser || !dataArray) return;
 
   analyser.getByteFrequencyData(dataArray);
 
@@ -95,13 +116,13 @@ function detectBeat() {
   }
 }
 
-// 🎉 SHOW WISH (🔥 FIXED)
+// =======================
+// 🎉 SHOW WISH
+// =======================
 function showWish() {
   const wish = document.getElementById("wish");
 
-  if (wish) {
-    wish.style.display = "flex"; // 🔥 IMPORTANT
-  }
+  if (wish) wish.style.display = "flex";
 
   showText = true;
   animate();
@@ -111,15 +132,20 @@ function showWish() {
   }, 3000);
 }
 
+// =======================
 // 🎁 OPEN CARD
+// =======================
 function openCard() {
   document.body.style.opacity = "0";
+
   setTimeout(() => {
-    alert("🎂 Happy Birthday PK 🎉");
+    window.location.href = "card.html"; // 🔥 FIXED redirect
   }, 1000);
 }
 
+// =======================
 // 🎆 CANVAS
+// =======================
 const canvas = document.getElementById("fireworks-canvas");
 const ctx = canvas.getContext("2d");
 
@@ -130,7 +156,9 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// PARTICLES
+// =======================
+// ✨ PARTICLES
+// =======================
 let particles = [];
 let rockets = [];
 
@@ -182,7 +210,9 @@ class Rocket {
   }
 }
 
-// 💥 EXPLODE
+// =======================
+// 💥 EXPLOSION
+// =======================
 function explode(x, y) {
   if (boomSound) {
     boomSound.currentTime = 0;
@@ -199,7 +229,9 @@ function explode(x, y) {
   }
 }
 
-// 🎆 LOOP
+// =======================
+// 🎆 ANIMATION
+// =======================
 function animate() {
   requestAnimationFrame(animate);
 
@@ -215,7 +247,9 @@ function animate() {
   drawText();
 }
 
-// TEXT
+// =======================
+// ✨ TEXT
+// =======================
 let msg = "🎉 Happy Birthday PK 🎉";
 let txt = "";
 let i = 0;
@@ -234,7 +268,9 @@ function drawText() {
   ctx.fillText(txt, canvas.width/2, canvas.height/2);
 }
 
-// EVENTS
+// =======================
+// 🎯 EVENTS
+// =======================
 startOverlay.addEventListener("click", startApp, { once: true });
 startOverlay.addEventListener("touchstart", startApp, { once: true });
 

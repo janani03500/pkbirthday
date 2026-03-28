@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- ✅ MOBILE FIX (VERY IMPORTANT) -->
+  <!-- ✅ MOBILE FIX -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title>Prathish Kumar 🎉</title>
@@ -14,7 +14,7 @@
 
   <!-- 🎬 START OVERLAY -->
   <div id="start-overlay">
-    <h1>Tap to Start 🎂</h1>
+    <h1>🎉 Tap to Start 🎂</h1>
   </div>
 
   <!-- ⏳ COUNTDOWN -->
@@ -23,7 +23,7 @@
   </div>
 
   <!-- 🎉 WISH SECTION -->
-  <div id="wish">
+  <div id="wish" style="display:none;">
     <h1 id="wish-text">🎉 Happy Birthday PK 🎉</h1>
     <button id="btn-card">🎂 Open Card</button>
   </div>
@@ -31,9 +31,14 @@
   <!-- 🎆 FIREWORKS -->
   <canvas id="fireworks-canvas"></canvas>
 
-  <!-- 🎧 AUDIO -->
-  <audio id="music" src="birthday-song.mp3" loop preload="auto"></audio>
-  <audio id="boomSound" src="boom.mp3" preload="auto"></audio>
+  <!-- 🎧 AUDIO (🔥 VERY IMPORTANT FIX) -->
+  <audio id="music" loop playsinline preload="auto">
+    <source src="birthday-song.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="boomSound" playsinline preload="auto">
+    <source src="boom.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="script.js"></script>
 
